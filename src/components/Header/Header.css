@@ -11,17 +11,20 @@
   pointer-events: none;
 }
 
-.header-logo {
+.header-logo{
   pointer-events: all;
   flex-shrink: 0;
+  position: relative;
+  z-index: 5;
 }
 
-.header-motif {
+.header-motif{
   flex: 1;
   height: 60px;
   max-width: 500px;
   margin-left: 2rem;
   position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 768px) {

@@ -1,20 +1,48 @@
+/* CardStack.css - Electric mobile card experience */
+
 .card-stack-container {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60vh;
+  height: 55vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  touch-action: none;
+  overflow: visible;
+  touch-action: pan-y;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Ambient glow behind the stack */
+.card-glow {
+  position: absolute;
+  width: 200px;
+  height: 280px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(6, 182, 212, 0.25) 0%,
+    rgba(6, 182, 212, 0.1) 40%,
+    transparent 70%
+  );
+  filter: blur(40px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 0;
+}
+
+.card-glow.dragging {
+  opacity: 1.5;
+  transform: scale(1.2);
 }
 
 .card-stack-wrapper {
   position: absolute;
-  width: 70vw;
-  max-width: 280px;
+  width: 65vw;
+  max-width: 260px;
+  min-width: 200px;
   aspect-ratio: 0.65;
   will-change: transform;
   display: flex;
@@ -23,23 +51,29 @@
 }
 
 .card-stack-card {
+  position: relative;
   width: 100%;
   height: 100%;
-  background-color: var(--qd-forest);
+  background-color: var(--qd-forest, #1a2f2a);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 16px;
-  box-shadow: 
-    0 12px 50px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(8, 145, 178, 0.3),
-    0 0 30px rgba(6, 182, 212, 0.15);
   cursor: grab;
-    touch-action: pan-y;
+  touch-action: pan-x;
+  -webkit-user-select: none;
   user-select: none;
+  -webkit-touch-callout: none;
+  
+  /* Base shadow */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(8, 145, 178, 0.2);
+  
+  transition: box-shadow 0.3s ease;
 }
 
-.card-stack-card:not(.is-top){
+.card-stack-card:not(.is-top) {
   pointer-events: none;
 }
 
@@ -47,20 +81,149 @@
   cursor: grabbing;
 }
 
-.card-stack-hint {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.875rem;
-  font-family: 'SF Mono', monospace;
-  letter-spacing: 0.05em;
-  pointer-events: none;
-  animation: pulse 2s ease-in-out infinite;
+/* Top card gets the electric treatment */
+.card-stack-card.is-top {
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(6, 182, 212, 0.4),
+    0 0 60px rgba(6, 182, 212, 0.15);
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.7; }
+/* Holographic shine overlay */
+.card-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(
+    125deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(6, 182, 212, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 250% 250%;
+  animation: shine 4s ease-in-out infinite;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+@keyframes shine {
+  0%, 100% {
+    background-position: 200% 200%;
+  }
+  50% {
+    background-position: -50% -50%;
+  }
+}
+
+/* Animated border glow */
+.card-border-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 18px;
+  background: linear-gradient(
+    90deg,
+    rgba(6, 182, 212, 0.6),
+    rgba(34, 211, 238, 0.4),
+    rgba(6, 182, 212, 0.2),
+    rgba(34, 211, 238, 0.4),
+    rgba(6, 182, 212, 0.6)
+  );
+  background-size: 300% 100%;
+  animation: borderGlow 3s linear infinite;
+  z-index: -1;
+  opacity: 0.7;
+}
+
+@keyframes borderGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+/* Inner mask to create border effect */
+.card-border-glow::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 16px;
+  background: var(--qd-forest, #1a2f2a);
+}
+
+/* Hint text */
+.card-stack-hint {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.card-stack-hint span {
+  animation: hintPulse 2.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes hintPulse {
+  0%, 100% { 
+    opacity: 0.5; 
+    transform: translateY(0);
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: translateY(-2px);
+  }
+}
+
+/* Tap feedback */
+.card-stack-card.is-top:active {
+  box-shadow: 
+    0 6px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 2px rgba(6, 182, 212, 0.6),
+    0 0 40px rgba(6, 182, 212, 0.3);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .card-shine,
+  .card-border-glow,
+  .card-stack-hint span {
+    animation: none;
+  }
+  
+  .card-shine {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .card-border-glow {
+    background: rgba(6, 182, 212, 0.4);
+  }
+}
+
+/* Small screens - bigger tap target */
+@media (max-width: 380px) {
+  .card-stack-wrapper {
+    width: 75vw;
+    min-width: 180px;
+  }
+  
+  .card-stack-container {
+    height: 50vh;
+  }
+  
+  .card-stack-hint {
+    font-size: 0.75rem;
+    bottom: 1rem;
+  }
 }

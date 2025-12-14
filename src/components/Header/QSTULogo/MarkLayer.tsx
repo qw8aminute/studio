@@ -1,18 +1,18 @@
-import { useEffect, useRef } from 'react'
 import { animated, useSpring } from '@react-spring/web'
-
-export type HeaderPanel = 'about' | 'contact' | 'resume'
+import type { QSTUPanel } from './QSTULogo'
 
 type Props = {
   visible: boolean
-  hovered: boolean
-  onHover: (v: boolean) => void
-  onSelect?: (panel: HeaderPanel) => void
+  open: boolean
+  setOpen: (v: boolean) => void
+  onSelect?: (panel: QSTUPanel) => void
 }
 
-export default function MarkLayer({ visible, hovered, onHover, onSelect }: Props) {
-  const rootRef = useRef<HTMLDivElement | null>(null)
+const isCoarsePointer = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia?.('(pointer: coarse)').matches
 
+export default function MarkLayer({ visible, open, setOpen, onSelect }: Props) {
   const fade = useSpring({
     opacity: visible ? 1 : 0,
     transform: visible ? 'translateY(0px) scale(1)' : 'translateY(6px) scale(0.985)',
@@ -20,69 +20,71 @@ export default function MarkLayer({ visible, hovered, onHover, onSelect }: Props
   })
 
   const menu = useSpring({
-    opacity: hovered ? 1 : 0,
-    maxHeight: hovered ? 220 : 0,
-    transform: hovered ? 'translateY(0px)' : 'translateY(-10px)',
+    opacity: open ? 1 : 0,
+    maxHeight: open ? 240 : 0,
+    transform: open ? 'translateY(0px) scale(1)' : 'translateY(-10px) scale(0.985)',
     config: { tension: 320, friction: 26 },
   })
 
-  // Touch behavior: close when tapping outside
-  useEffect(() => {
-    if (!hovered) return
+  const onPointerDown = (e: React.PointerEvent) => {
+    // tap-to-toggle only on coarse pointer devices (mobile/tablet)
+    if (!isCoarsePointer()) return
+    e.preventDefault()
+    e.stopPropagation()
+    setOpen(!open)
+  }
 
-    const onDocPointerDown = (e: PointerEvent) => {
-      const el = rootRef.current
-      if (!el) return
-      if (!el.contains(e.target as Node)) onHover(false)
-    }
+  const onMouseEnter = () => {
+    // hover-to-open only on fine pointers (desktop/laptop)
+    if (isCoarsePointer()) return
+    setOpen(true)
+  }
 
-    document.addEventListener('pointerdown', onDocPointerDown, { capture: true })
-    return () => document.removeEventListener('pointerdown', onDocPointerDown, { capture: true })
-  }, [hovered, onHover])
+  const onMouseLeave = () => {
+    if (isCoarsePointer()) return
+    setOpen(false)
+  }
 
-  const select = (p: HeaderPanel) => {
-    onSelect?.(p)
-    onHover(false)
+  const pick = (panel: QSTUPanel) => {
+    onSelect?.(panel)
+    setOpen(false)
   }
 
   return (
     <animated.div className="qstu-mark-layer" style={fade}>
       <div
-        ref={rootRef}
         className="qstu-mark"
-        onPointerEnter={(e) => {
-          if (e.pointerType === 'mouse') onHover(true)
-        }}
-        onPointerLeave={(e) => {
-          if (e.pointerType === 'mouse') onHover(false)
-        }}
-        onClick={(e) => {
-          // Tap toggles on touch; mouse hover handles itself.
-          // Stop bubbling so parent/document handlers don't insta-close it.
-          e.stopPropagation()
-          const isTouch = (e.nativeEvent as PointerEvent).pointerType === 'touch'
-          if (isTouch) onHover(!hovered)
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        onPointerDown={onPointerDown}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') setOpen(false)
+          if (e.key === 'Enter' || e.key === ' ') setOpen(!open)
         }}
       >
-        <div className={`qstu-text ${hovered ? 'is-hidden' : ''}`}>
+        <div className={`qstu-text ${open ? 'is-hidden' : ''}`}>
           <div>QS</div>
           <div>TU</div>
         </div>
 
         <animated.div
-          className={`qstu-menu ${hovered ? 'is-open' : ''}`}
+          className={`qstu-menu ${open ? 'is-open' : ''}`}
           style={menu}
-          aria-hidden={!hovered}
+          aria-hidden={!open}
+          onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="menu-inner">
-            <button className="menu-item" type="button" onClick={() => select('about')}>
+            <button className="menu-item" type="button" onClick={() => pick('about')}>
               About
             </button>
-            <button className="menu-item" type="button" onClick={() => select('contact')}>
+            <button className="menu-item" type="button" onClick={() => pick('contact')}>
               Contact
             </button>
-            <button className="menu-item" type="button" onClick={() => select('resume')}>
+            <button className="menu-item" type="button" onClick={() => pick('resume')}>
               Resume
             </button>
           </div>

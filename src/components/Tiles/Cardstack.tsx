@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { useSprings, animated, to as interpolate } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 import { TAROT_CARDS } from '../../types'
@@ -9,95 +9,132 @@ interface CardStackProps {
 }
 
 const trans = (r: number, s: number) =>
-  `perspective(1500px) rotateX(12deg) rotateY(${r / 12}deg) rotateZ(${r}deg) scale(${s})`
+  `perspective(1500px) rotateX(8deg) rotateY(${r / 15}deg) rotateZ(${r}deg) scale(${s})`
 
 export default function CardStack({ onCardSelect }: CardStackProps) {
   const cards = TAROT_CARDS
-
-  // top points at the "current" card in the deck (0..len-1)
   const [top, setTop] = useState(cards.length - 1)
+  const [isDragging, setIsDragging] = useState(false)
 
-  // Compute the stack order: top card is last index = top, then top-1, etc (wrap if you want later)
   const order = useMemo(() => {
-    // show all cards behind the top for now
     return Array.from({ length: cards.length }, (_, i) => i)
   }, [cards.length])
 
-  // Base pose for each card based on how far from top it is
-  const pose = (i: number, currentTop: number) => {
-    const depth = currentTop - i // 0 for top, positive for behind
+  const pose = useCallback((i: number, currentTop: number) => {
+    const depth = currentTop - i
     return {
       x: 0,
-      y: Math.min(10, depth * 3),        // stack down slightly
-      scale: 1 - Math.min(0.06, depth * 0.01),
-      rot: depth === 0 ? 0 : -2 + (i % 5) * 0.6,
+      y: Math.min(12, depth * 4),
+      scale: 1 - Math.min(0.08, depth * 0.015),
+      rot: depth === 0 ? 0 : -1.5 + (i % 5) * 0.4,
       immediate: false as const,
-      config: { tension: 320, friction: 30 },
+      config: { tension: 280, friction: 28 },
     }
-  }
+  }, [])
 
   const [springs, api] = useSprings(cards.length, (i) => pose(i, top))
 
-  // whenever top changes, restack immediately
-  const restack = (nextTop: number) => {
+  const restack = useCallback((nextTop: number) => {
     api.start((i) => pose(i, nextTop))
-  }
+  }, [api, pose])
+
+  // Haptic feedback helper
+  const haptic = useCallback((style: 'light' | 'medium' | 'heavy' = 'light') => {
+    if ('vibrate' in navigator) {
+      const patterns = { light: 10, medium: 20, heavy: 40 }
+      navigator.vibrate(patterns[style])
+    }
+  }, [])
 
   const bind = useDrag(
-    ({ down, movement: [mx], velocity: [vx], direction: [xDir], last, tap }) => {
-      const index = top // only interact with current top card
+    ({ down, movement: [mx, my], velocity: [vx], direction: [xDir], first, last, tap, event }) => {
+      const index = top
       const dir = xDir < 0 ? -1 : 1
 
+      // Prevent default to stop scroll interference
+      if (event && 'preventDefault' in event) {
+        event.preventDefault()
+      }
+
+      if (first) {
+        setIsDragging(true)
+        haptic('light')
+      }
+
+      // TAP = open the card
       if (tap) {
+        setIsDragging(false)
+        haptic('medium')
         onCardSelect(cards[index].id)
         return
       }
 
-      // if user drags mostly vertically, cancel to avoid weirdness
-      if (Math.abs(mx) < 2 && !down) return
+      // Determine if this is a horizontal swipe (not vertical scroll attempt)
+      const isHorizontalSwipe = Math.abs(mx) > Math.abs(my) * 0.8
 
-      const throwIt = !down && (Math.abs(mx) > 90 || vx > 0.25)
+      // Throw threshold - easier to trigger
+      const shouldThrow = !down && isHorizontalSwipe && (Math.abs(mx) > 60 || vx > 0.2)
 
       api.start((i) => {
         if (i !== index) return
 
-        const x = throwIt ? (window.innerWidth + 220) * dir : down ? mx : 0
-        const rot = mx / 18 + (throwIt ? dir * 12 : 0)
-        const scale = down ? 1.03 : 1
-
-        return {
-          x,
-          rot,
-          scale,
-          immediate: false,
-          config: { tension: down ? 700 : 320, friction: 36 },
+        if (shouldThrow) {
+          // Fling it off screen
+          return {
+            x: (window.innerWidth + 300) * dir,
+            rot: dir * 25,
+            scale: 0.95,
+            immediate: false,
+            config: { tension: 200, friction: 30 },
+          }
         }
+
+        if (down && isHorizontalSwipe) {
+          // Active drag - follow finger with tilt
+          return {
+            x: mx,
+            rot: mx / 12,
+            scale: 1.02,
+            immediate: false,
+            config: { tension: 800, friction: 35 },
+          }
+        }
+
+        // Snap back
+        return pose(i, top)
       })
 
       if (last) {
-        if (throwIt) {
+        setIsDragging(false)
+        
+        if (shouldThrow) {
+          haptic('heavy')
           const nextTop = index - 1
-          // advance deck (reset if empty)
           const normalized = nextTop >= 0 ? nextTop : cards.length - 1
-          setTop(normalized)
-          // restack using the new top (don’t wait for state)
-          restack(normalized)
-        } else {
-          // snap back
-          api.start((i) => (i === index ? pose(i, top) : undefined))
+          
+          // Small delay before restacking for smoother feel
+          setTimeout(() => {
+            setTop(normalized)
+            restack(normalized)
+          }, 150)
         }
       }
     },
     {
       filterTaps: true,
-      threshold: 8,
-      preventScroll: true,
+      threshold: 5,
+      axis: 'x',
+      preventScrollAxis: 'x',
+      pointer: { touch: true },
       eventOptions: { passive: false },
     }
   )
 
   return (
     <div className="card-stack-container">
+      {/* Glow backdrop for top card */}
+      <div className={`card-glow ${isDragging ? 'dragging' : ''}`} />
+      
       {order.map((i) => {
         const isTop = i === top
         const { x, y, rot, scale } = springs[i]
@@ -109,7 +146,7 @@ export default function CardStack({ onCardSelect }: CardStackProps) {
             style={{
               x,
               y,
-              zIndex: i === top ? 999 : i, // top always above
+              zIndex: i === top ? 999 : i,
             }}
           >
             <animated.div
@@ -119,13 +156,19 @@ export default function CardStack({ onCardSelect }: CardStackProps) {
                 transform: interpolate([rot, scale], trans),
                 backgroundImage: `url(${cards[i].src})`,
               }}
-            />
+            >
+              {/* Holographic shine overlay */}
+              {isTop && <div className="card-shine" />}
+              
+              {/* Animated border */}
+              {isTop && <div className="card-border-glow" />}
+            </animated.div>
           </animated.div>
         )
       })}
 
       <div className="card-stack-hint">
-        <span>Tap to open • Swipe to discard</span>
+        <span>Tap to open · Swipe to browse</span>
       </div>
     </div>
   )

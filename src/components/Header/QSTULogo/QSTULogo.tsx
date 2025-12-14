@@ -3,32 +3,32 @@ import GridLayer from './GridLayer'
 import MarkLayer from './MarkLayer'
 import './QSTULogo.css'
 
-export type HeaderPanel = 'about' | 'contact' | 'resume'
+export type QSTUPanel = 'about' | 'contact' | 'resume'
 
 type Props = {
-  onSelect?: (panel: HeaderPanel) => void
+  onSelect?: (panel: QSTUPanel) => void
 }
 
 export default function QSTULogo({ onSelect }: Props) {
   const [showMark, setShowMark] = useState(false)
-  const [hovered, setHovered] = useState(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const id = window.setTimeout(() => setShowMark(true), 2000)
-    return () => window.clearTimeout(id)
+    const id = setTimeout(() => setShowMark(true), 2000)
+    return () => clearTimeout(id)
   }, [])
 
   return (
-    <div className="qstu-root">
+    <div className="qstu-root" onPointerDown={(e) => e.stopPropagation()}>
       <div className="qstu-stage">
         <div className="qstu-grid-wrap">
-          <GridLayer showSmiley={!showMark || hovered} />
+          <GridLayer showSmiley={!showMark || open} />
         </div>
 
         <MarkLayer
           visible={showMark}
-          hovered={hovered}
-          onHover={setHovered}
+          open={open}
+          setOpen={setOpen}
           onSelect={onSelect}
         />
       </div>
