@@ -1,0 +1,49 @@
+.dock-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 2rem;
+}
+
+.dock {
+  display: flex;
+  /* align-items: flex-end is KEY - cards grow upward out of dock */
+  align-items: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  padding-top: 4rem; /* Extra space for cards to pop into */
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(8, 145, 178, 0.2);
+  border-radius: 28px;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  pointer-events: all;
+}
+
+@media (max-width: 1200px) {
+  .dock {
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    padding-top: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dock-container {
+    padding-bottom: 1rem;
+  }
+  
+  .dock {
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    padding-top: 2.5rem;
+    border-radius: 20px;
+  }
+}
