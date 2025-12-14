@@ -79,8 +79,14 @@
     transparent 65%,
     transparent 100%
   );
-  transform: rotate(25deg);
-  animation: shineSweep 3s ease-in-out infinite;
+  transform: rotate(25deg) translateX(-100%);
+
+  /* 👇 the fix */
+  animation-name: shineSweep;
+  animation-duration: var(--shine-duration, 6800ms);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-delay: var(--shine-delay, 0ms);
 }
 
 @keyframes shineSweep {
@@ -110,7 +116,8 @@
     rgba(6, 182, 212, 0.8) 100%
   );
   background-size: 300% 100%;
-  animation: borderFlow 3s linear infinite;
+  animation: borderFlow var(--border-duration, 5800ms) linear infinite;
+  animation-delay: var(--border-delay, 0ms);
   
   /* Use mask to create border effect */
   -webkit-mask: 
@@ -147,7 +154,8 @@
     rgba(6, 182, 212, 0.5) 100%
   );
   background-size: 300% 100%;
-  animation: borderFlow 3s linear infinite;
+  animation: borderFlow var(--border-duration, 5800ms) linear infinite;
+  animation-delay: var(--border-delay, 0ms);
   filter: blur(8px);
   z-index: -1;
 }
@@ -163,7 +171,7 @@
   font-family: 'SF Mono', 'Fira Code', monospace;
   letter-spacing: 0.05em;
   pointer-events: none;
-  animation: hintPulse 2s ease-in-out infinite;
+  animation: hintPulse 5s ease-in-out infinite;
 }
 
 @keyframes hintPulse {

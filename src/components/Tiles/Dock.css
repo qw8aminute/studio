@@ -1,49 +1,99 @@
-.dock-container {
+/* Dock.css */
+
+.dock-container{
   position: fixed;
-  bottom: 0;
   left: 0;
   right: 0;
+  bottom: 0;
   z-index: 100;
   pointer-events: none;
   display: flex;
   justify-content: center;
-  padding-bottom: 2rem;
+  padding-bottom: 3rem; /* keeps it off the screen edge */
 }
 
-.dock {
-  display: flex;
-  /* align-items: flex-end is KEY - cards grow upward out of dock */
-  align-items: flex-end;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  padding-top: 4rem; /* Extra space for cards to pop into */
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(8, 145, 178, 0.2);
-  border-radius: 28px;
-  box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+.dock{
   pointer-events: all;
+  display: flex;
+
+  /* was flex-end */
+  align-items: center;
+
+  gap: 0.9rem;
+
+  height: 260px;
+
+  /* symmetrical padding = visual centering */
+  padding: 1.5rem 2rem;
+
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(8, 145, 178, 0.25);
+  border-radius: 32px;
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.35),
+    0 0 30px rgba(6,182,212,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+
+  overflow: visible;
 }
 
-@media (max-width: 1200px) {
-  .dock {
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    padding-top: 3rem;
-  }
+
+/* the cards (buttons) */
+.dock-card{
+  all: unset;
+  position: relative;
+
+  width: 140px;
+  height: 210px;
+
+  flex: 0 0 auto;
+  border-radius: 18px;
+  cursor: pointer;
+  overflow: visible;
+
+  transform-origin: bottom center;
+  will-change: transform;
+
+  /* REMOVE the hack that pulled them out of the glass */
+  margin-bottom: 0;
+
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(8,145,178,0.22),
+    0 0 18px rgba(6,182,212,0.12);
 }
 
-@media (max-width: 768px) {
-  .dock-container {
-    padding-bottom: 1rem;
-  }
-  
-  .dock {
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    padding-top: 2.5rem;
-    border-radius: 20px;
-  }
+@media (max-width: 1200px){
+  .dock{ height: 230px; padding: 1rem 1.5rem 2.75rem; gap: 0.7rem; }
+  .dock-card{ width: 120px; height: 185px; border-radius: 16px; }
+}
+
+@media (max-width: 900px){
+  .dock-container{ padding-bottom: 2rem; }
+  .dock{ height: 210px; padding: 0.9rem 1.25rem 2.4rem; border-radius: 26px; gap: 0.6rem; }
+  .dock-card{ width: 105px; height: 165px; border-radius: 14px; }
+}
+
+/* ensure we can z-index children cleanly */
+.dock {
+  position: relative;
+}
+
+/* each card participates in stacking */
+.dock-card {
+  position: relative;
+  z-index: 1;
+}
+
+/* hovered/focused card sits on top */
+.dock-card:hover,
+.dock-card:focus-visible {
+  z-index: 50;
+}
+
+/* optional: when active/clicking, keep it on top too */
+.dock-card:active {
+  z-index: 60;
 }
