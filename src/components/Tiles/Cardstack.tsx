@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useSprings, animated, to as interpolate } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 import { TAROT_CARDS } from '../../types'
@@ -8,167 +8,102 @@ interface CardStackProps {
   onCardSelect: (cardId: string) => void
 }
 
+// Initial position for each card in the stack
+const to = (i: number) => ({
+  x: 0,
+  y: i * -4,
+  scale: 1,
+  rot: -6 + Math.random() * 12,
+  delay: i * 100,
+})
+
+// Cards fly in from above
+const from = (_i: number) => ({ x: 0, rot: 0, scale: 1.5, y: -1000 })
+
+// Transform string for 3D effect
 const trans = (r: number, s: number) =>
-  `perspective(1500px) rotateX(8deg) rotateY(${r / 15}deg) rotateZ(${r}deg) scale(${s})`
+  `perspective(1500px) rotateX(20deg) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`
 
 export default function CardStack({ onCardSelect }: CardStackProps) {
   const cards = TAROT_CARDS
-  const [top, setTop] = useState(cards.length - 1)
-  const [isDragging, setIsDragging] = useState(false)
+  const [gone] = useState(() => new Set<number>())
 
-  const order = useMemo(() => {
-    return Array.from({ length: cards.length }, (_, i) => i)
-  }, [cards.length])
+  const [springs, api] = useSprings(cards.length, i => ({
+    ...to(i),
+    from: from(i),
+  }))
 
-  const pose = useCallback((i: number, currentTop: number) => {
-    const depth = currentTop - i
-    return {
-      x: 0,
-      y: Math.min(12, depth * 4),
-      scale: 1 - Math.min(0.08, depth * 0.015),
-      rot: depth === 0 ? 0 : -1.5 + (i % 5) * 0.4,
-      immediate: false as const,
-      config: { tension: 280, friction: 28 },
-    }
-  }, [])
-
-  const [springs, api] = useSprings(cards.length, (i) => pose(i, top))
-
-  const restack = useCallback((nextTop: number) => {
-    api.start((i) => pose(i, nextTop))
-  }, [api, pose])
-
-  // Haptic feedback helper
-  const haptic = useCallback((style: 'light' | 'medium' | 'heavy' = 'light') => {
-    if ('vibrate' in navigator) {
-      const patterns = { light: 10, medium: 20, heavy: 40 }
-      navigator.vibrate(patterns[style])
-    }
+  // Haptic feedback
+  const haptic = useCallback((ms: number = 10) => {
+    if ('vibrate' in navigator) navigator.vibrate(ms)
   }, [])
 
   const bind = useDrag(
-    ({ down, movement: [mx, my], velocity: [vx], direction: [xDir], first, last, tap, event }) => {
-      const index = top
-      const dir = xDir < 0 ? -1 : 1
-
-      // Prevent default to stop scroll interference
-      if (event && 'preventDefault' in event) {
-        event.preventDefault()
-      }
-
-      if (first) {
-        setIsDragging(true)
-        haptic('light')
-      }
-
-      // TAP = open the card
+    ({ args: [index], down, movement: [mx], direction: [xDir], velocity: [vx], tap }) => {
+      // Tap = open the card
       if (tap) {
-        setIsDragging(false)
-        haptic('medium')
+        haptic(15)
         onCardSelect(cards[index].id)
         return
       }
 
-      // Determine if this is a horizontal swipe (not vertical scroll attempt)
-      const isHorizontalSwipe = Math.abs(mx) > Math.abs(my) * 0.8
+      const trigger = vx > 0.2 // Flick threshold
+      const dir = xDir < 0 ? -1 : 1
 
-      // Throw threshold - easier to trigger
-      const shouldThrow = !down && isHorizontalSwipe && (Math.abs(mx) > 60 || vx > 0.2)
+      if (!down && trigger) {
+        gone.add(index)
+        haptic(25)
+      }
 
-      api.start((i) => {
-        if (i !== index) return
+      api.start(i => {
+        if (index !== i) return // Only animate the card being dragged
+        const isGone = gone.has(index)
+        const x = isGone ? (200 + window.innerWidth) * dir : down ? mx : 0
+        const rot = mx / 100 + (isGone ? dir * 10 * vx : 0)
+        const scale = down ? 1.08 : 1
 
-        if (shouldThrow) {
-          // Fling it off screen
-          return {
-            x: (window.innerWidth + 300) * dir,
-            rot: dir * 25,
-            scale: 0.95,
-            immediate: false,
-            config: { tension: 200, friction: 30 },
-          }
+        return {
+          x,
+          rot,
+          scale,
+          delay: undefined,
+          config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 },
         }
-
-        if (down && isHorizontalSwipe) {
-          // Active drag - follow finger with tilt
-          return {
-            x: mx,
-            rot: mx / 12,
-            scale: 1.02,
-            immediate: false,
-            config: { tension: 800, friction: 35 },
-          }
-        }
-
-        // Snap back
-        return pose(i, top)
       })
 
-      if (last) {
-        setIsDragging(false)
-        
-        if (shouldThrow) {
-          haptic('heavy')
-          const nextTop = index - 1
-          const normalized = nextTop >= 0 ? nextTop : cards.length - 1
-          
-          // Small delay before restacking for smoother feel
-          setTimeout(() => {
-            setTop(normalized)
-            restack(normalized)
-          }, 150)
-        }
+      // Reset deck when all cards are gone
+      if (!down && gone.size === cards.length) {
+        setTimeout(() => {
+          gone.clear()
+          api.start(i => to(i))
+        }, 600)
       }
     },
-    {
-      filterTaps: true,
-      threshold: 5,
-      axis: 'x',
-      preventScrollAxis: 'x',
-      pointer: { touch: true },
-      eventOptions: { passive: false },
-    }
+    { filterTaps: true, threshold: 10 }
   )
 
   return (
     <div className="card-stack-container">
-      {/* Glow backdrop for top card */}
-      <div className={`card-glow ${isDragging ? 'dragging' : ''}`} />
-      
-      {order.map((i) => {
-        const isTop = i === top
-        const { x, y, rot, scale } = springs[i]
-
-        return (
+      {springs.map(({ x, y, rot, scale }, i) => (
+        <animated.div className="card-stack-wrapper" key={cards[i].id} style={{ x, y }}>
           <animated.div
-            className="card-stack-wrapper"
-            key={cards[i].id}
+            {...bind(i)}
+            className="card-stack-card"
             style={{
-              x,
-              y,
-              zIndex: i === top ? 999 : i,
+              transform: interpolate([rot, scale], trans),
+              backgroundImage: `url(${cards[i].src})`,
             }}
           >
-            <animated.div
-              {...(isTop ? bind() : {})}
-              className={`card-stack-card ${isTop ? 'is-top' : ''}`}
-              style={{
-                transform: interpolate([rot, scale], trans),
-                backgroundImage: `url(${cards[i].src})`,
-              }}
-            >
-              {/* Holographic shine overlay */}
-              {isTop && <div className="card-shine" />}
-              
-              {/* Animated border */}
-              {isTop && <div className="card-border-glow" />}
-            </animated.div>
+            {/* Shine overlay */}
+            <div className="card-shine" />
+            {/* Glow border */}
+            <div className="card-glow-border" />
           </animated.div>
-        )
-      })}
+        </animated.div>
+      ))}
 
       <div className="card-stack-hint">
-        <span>Tap to open · Swipe to browse</span>
+        Tap to open · Swipe to browse
       </div>
     </div>
   )
