@@ -1,106 +1,137 @@
-# QD Studio
+QD Studio
 
-Portfolio website for Quaite Studio - showcasing creative work across design, product, and development.
+QD Studio is the personal portfolio and creative studio of Quaite Dodson, showcasing work across product, design, data, and interactive development.
 
-## Phase 1: Foundation ✅
+Built as a living system — part portfolio, part playground — it blends motion, narrative, and experimentation.
 
-**Tech Stack:**
-- React 18 + TypeScript
-- Vite
-- D3.js (force graph)
-- Framer Motion (animations)
-- React Router (navigation)
+© 2025 QD Studio. All rights reserved.
 
-**Features:**
-- ✅ Animated background (duality pattern)
-- ✅ Fixed header with QSTU logo
-- ✅ D3 force graph hero section
-- ✅ 6 liquid tiles with video backgrounds
-- ✅ Responsive grid layout
-- ✅ Smooth scrolling and transitions
-- ✅ React Router navigation (stubbed Phase 2 pages)
+Status
 
-## Getting Started
+Phase 1: Foundation — Complete ✅
 
-```bash
-# Install dependencies
-npm install
+This release establishes the visual system, interaction model, and core architecture.
 
-# Start dev server
-npm run dev
+Tech Stack
 
-# Build for production
-npm run build
+React 18 + TypeScript
 
-# Preview production build
-npm run preview
-```
+Vite
 
-## Project Structure
+React Router
 
-```
+D3.js (force-directed graph)
+
+React Spring / Framer Motion (animation)
+
+Canvas & SVG rendering
+
+CSS
+
+Features
+
+Animated duality background (canvas)
+
+Fixed header with QSTU logo system
+
+Force-directed typographic graph (hero motif)
+
+Liquid tile grid with video / gradient fallbacks
+
+Responsive layout (desktop + mobile)
+
+Route scaffolding for future sections
+
+Terminal-style modal system (About, Contact, Resume)
+
+
+Project Structure
 src/
 ├── components/
 │   ├── Background/
-│   │   ├── DualityCanvas.tsx    # Animated particle background
+│   │   └── DualityCanvas.tsx
 │   ├── Header/
-│   │   ├── Header.tsx           # Fixed header
-│   │   ├── QSTULogo.tsx         # Brand logo
-│   │   └── Menu.tsx             # Navigation menu
+│   │   ├── Header.tsx
+│   │   └── QSTULogo/
 │   ├── Hero/
-│   │   ├── Hero.tsx             # Hero section wrapper
-│   │   └── ForceGraph.tsx       # D3 force-directed graph
+│   │   └── ForceGraph.tsx
 │   ├── Tiles/
-│   │   ├── TileGrid.tsx         # Tile container
-│   │   └── LiquidTile.tsx       # Individual tile component
+│   │   ├── TileGrid.tsx
+│   │   └── CardStack.tsx
+│   ├── Terminal/
+│   │   ├── TerminalModal.tsx
+│   │   └── Screens/
 │   └── Footer/
-│       └── Footer.tsx           # Site footer
+│       └── Footer.tsx
 ├── pages/
-│   ├── Home.tsx                 # Main landing page
-│   └── sections/                # Landing pages (Phase 2)
+│   ├── Home.tsx
+│   └── sections/
 ├── types/
-│   └── index.ts                 # TypeScript types & data
-└── App.tsx                      # Router configuration
-```
+│   └── index.ts
+└── App.tsx
 
-## Video Assets
+Video Assets
 
-Place video files in `public/videos/`:
-- mini-templates.mp4
-- tuneup.mp4
-- brand-engine.mp4
-- micro-teaching.mp4
-- abq-visuals.mp4
-- experiments.mp4
+Optional video loops can be added to:
 
-**Specs:** 1920x1080 (16:9), MP4 (H.264), 10-15s loops, <5MB each
+public/videos/
 
-Tiles will show gradient fallbacks until videos are added.
 
-## Phase 2 Roadmap
+Expected files:
 
-- [ ] Individual landing pages for each tile
-- [ ] Custom backgrounds per section
-- [ ] Section-specific components
-- [ ] Pricing sections
-- [ ] CTA components
+mini-templates.mp4
 
-## Phase 3 Roadmap
+tuneup.mp4
 
-- [ ] Terminal window component
-- [ ] HTML artifact viewer
-- [ ] Fullscreen overlay system
-- [ ] ESC to close functionality
+brand-engine.mp4
 
-## Deployment
+micro-teaching.mp4
 
-Deploy to Cloudflare Pages:
+abq-visuals.mp4
 
-```bash
+experiments.mp4
+
+Recommended specs
+
+1920×1080 (16:9)
+
+MP4 (H.264)
+
+10–15s seamless loops
+
+< 5MB each
+
+Tiles gracefully fall back to gradients if videos are absent.
+
+Roadmap
+Phase 2
+
+Dedicated landing pages per tile
+
+Section-specific motion + backgrounds
+
+Narrative content expansion
+
+Clear CTAs and pathways
+
+Phase 3
+
+Terminal-first navigation patterns
+
+Artifact viewers (HTML, visuals, experiments)
+
+Fullscreen overlay system
+
+Keyboard-first interactions (ESC / CMD shortcuts)
+
+Deployment
+
+Designed for Cloudflare Pages.
+
 npm run build
-# Upload 'dist' folder to Cloudflare Pages
-```
+# deploy dist/
 
-## License
+License
 
-© 2024 QD Studio. All rights reserved.
+© 2025 QD Studio / Quaite Dodson
+All rights reserved.
