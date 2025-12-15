@@ -3,6 +3,7 @@ import { TAROT_CARDS } from '../../types'
 import Dock from './Dock'
 import CardStack from './Cardstack'
 import TerminalModal from '../Terminal/TerminalModal'
+import ExperimentTerminal from '../Terminal/CardComponents/ExperimentTerminal'
 
 const MOBILE_BREAKPOINT = 768
 
@@ -44,26 +45,32 @@ export default function TileGrid() {
       )}
 
       <TerminalModal
-        isOpen={!!activeCard}
-        onClose={() => setActiveCard(null)}
-        onMinimize={() => setActiveCard(null)}
-        title={openCard?.title ?? ''}
-      >
-        <div
-          style={{
-            minHeight: 400,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--qd-cyan)',
-            fontSize: '1.5rem',
-            fontFamily:
-              'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "SF Mono", "Courier New", monospace',
-          }}
-        >
-          {openCard?.title} - Portfolio Content Coming Soon
-        </div>
-      </TerminalModal>
+  isOpen={!!activeCard}
+  onClose={() => setActiveCard(null)}
+  onMinimize={() => setActiveCard(null)}
+  title={openCard?.title ?? ''}
+>
+  {openCard?.title?.toUpperCase() === 'THE EXPERIMENT' ? (
+    <div style={{ height: '100%', minHeight: 520, padding: 0, overflow: 'hidden' }}>
+      <ExperimentTerminal />
+    </div>
+  ) : (
+    <div
+      style={{
+        minHeight: 400,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'var(--qd-cyan)',
+        fontSize: '1.5rem',
+        fontFamily:
+          'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "SF Mono", "Courier New", monospace',
+      }}
+    >
+      {openCard?.title} - Portfolio Content Coming Soon
+    </div>
+  )}
+</TerminalModal>
     </>
   )
 }
