@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Header from './components/Header/Header'
 import DualityCanvas from './components/Background/DualityCanvas'
 import Home from './pages/Home'
-import MiniTemplatesLanding from './pages/sections/MiniTemplatesLanding'
+import TheTemplates from './components/Terminal/TheTemplates/TheTemplates'
 import {
   TuneUpLanding,
   BrandEngineLanding,
@@ -16,8 +16,10 @@ import TerminalModal from './components/Terminal/TerminalModal'
 import AboutTerminal from './components/Terminal/Screens/AboutTerminal'
 import ContactTerminal from './components/Terminal/Screens/ContactTerminal'
 import ResumeTerminal from './components/Terminal/Screens/ResumeTerminal'
+import MiniTemplatesLanding from './pages/sections/MiniTemplatesLanding'
 
-type Panel = 'about' | 'contact' | 'resume' | 'linkedin404' | null
+
+type Panel = 'about' | 'contact' | 'resume' | 'templates' | 'linkedin404' | null
 
 export default function App() {
   const [panel, setPanel] = useState<Panel>(null)
@@ -26,6 +28,7 @@ export default function App() {
     if (panel === 'about') return 'ABOUT ME'
     if (panel === 'contact') return 'CONTACT'
     if (panel === 'resume') return 'RESUME'
+    if (panel === 'templates') return 'THE TEMPLATES'
     if (panel === 'linkedin404') return '404 NO LINK'
     return ''
   }, [panel])
@@ -43,7 +46,7 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/mini-templates" element={<MiniTemplatesLanding />} />
+        <Route path="/templates" element={<MiniTemplatesLanding />} />
         <Route path="/tuneup" element={<TuneUpLanding />} />
         <Route path="/brand-engine" element={<BrandEngineLanding />} />
         <Route path="/micro-teaching" element={<MicroTeachingLanding />} />
@@ -63,7 +66,7 @@ export default function App() {
           <ContactTerminal onLinkedIn404={() => setPanel('linkedin404')} />
         )}
         {panel === 'resume' && <ResumeTerminal />}
-
+        {panel === 'templates' && <TheTemplates />}
         {panel === 'linkedin404' && (
           <div style={{
             fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "SF Mono", "Courier New", monospace',

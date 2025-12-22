@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { Parallax, ParallaxLayer } from '@react-spring/parallax'
+import type { IParallax } from '@react-spring/parallax'
 import * as d3 from 'd3'
 import QSTULogo from '../../Header/QSTULogo/QSTULogo'
 import './ExperimentTerminal.css'
@@ -183,7 +184,7 @@ const PROJECTS: Project[] = [
     fullUrl: 'https://calcqon.com',
     tagline: 'quantum problem calculator',
     description:
-      'calcQon transforms messy regional crises—water rights, housing allocation, energy grids—into structured optimization problems. It picks the right quantum or hybrid solver so teams can test scenarios before committing real dollars. Decision modeling that bridges human intuition with computational precision.',
+      'calcQon transforms messy regional crises—water rights, housing allocation, energy grids—into structured optimization problems. It picks the right quantum or hybrid solver so teams can test scenarios before committing real dollars.',
     Visual: CalcQonVisual,
   },
   {
@@ -193,164 +194,170 @@ const PROJECTS: Project[] = [
     fullUrl: 'https://drumcanon.org',
     tagline: 'music therapy',
     description:
-      "Drum Canon explores rhythm as medicine. Turn any tap, hum, or movement into music—instantly. We're researching how drumming patterns support cognitive health, emotional regulation, and human connection. Music without barriers, therapy without stigma.",
+      "Drum Canon explores rhythm as medicine. Turn any tap, hum, or movement into music—instantly. We're researching how drumming patterns support cognitive health, emotional regulation, and human connection.",
     Visual: DrumCanonVisual,
   },
 ]
 
-/* ========== SNAP + PARALLAX ========== */
-
-const SNAP_DEBOUNCE_MS = 140
-
-// Minimal local type: enough for scrollTo + container.current
-type ParallaxApi = {
-  scrollTo: (page: number) => void
-  container?: { current: HTMLElement | null }
-}
+/* ========== MAIN COMPONENT ========== */
 
 export default function ExperimentTerminal() {
-  const parallaxRef = useRef<ParallaxApi | null>(null)
+  const parallaxRef = useRef<IParallax | null>(null)
+  const totalPages = PROJECTS.length + 1
 
   const scrollToPage = (pageIndex: number) => {
     parallaxRef.current?.scrollTo(pageIndex)
   }
 
+  // Snap to nearest page after user stops scrolling
   useEffect(() => {
     const el = parallaxRef.current?.container?.current
     if (!el) return
 
-    let t: number | null = null
+    let timeoutId: number | null = null
+
     const onScroll = () => {
-      if (t) window.clearTimeout(t)
-      t = window.setTimeout(() => {
+      if (timeoutId) window.clearTimeout(timeoutId)
+
+      timeoutId = window.setTimeout(() => {
         const pageH = el.clientHeight || 1
         const raw = el.scrollTop / pageH
         const nearest = Math.round(raw)
-        scrollToPage(nearest)
-      }, SNAP_DEBOUNCE_MS)
+
+        // Only snap if they're meaningfully between pages
+        if (Math.abs(raw - nearest) > 0.02) {
+          scrollToPage(nearest)
+        }
+      }, 120)
     }
 
     el.addEventListener('scroll', onScroll, { passive: true })
     return () => {
-      if (t) window.clearTimeout(t)
-      el.removeEventListener('scroll', onScroll as any)
+      if (timeoutId) window.clearTimeout(timeoutId)
+      el.removeEventListener('scroll', onScroll)
     }
   }, [])
 
   return (
     <div className="experiment-terminal">
-      <Parallax ref={parallaxRef as any} pages={PROJECTS.length + 1}>
-        <ParallaxLayer offset={0} speed={0} factor={PROJECTS.length + 1} className="experiment-stars" />
+      <Parallax ref={parallaxRef} pages={totalPages} className="experiment-parallax">
+        {/* Background layers */}
+        <ParallaxLayer offset={0} speed={0} factor={totalPages} className="layer-stars" />
+        <ParallaxLayer
+          offset={0.3}
+          speed={0.06}
+          factor={totalPages}
+          className="layer-nebula layer-nebula--purple"
+        />
 
-        {Array.from({ length: PROJECTS.length + 1 }, (_, i) => (
-          <React.Fragment key={`bg-${i}`}>
-            <ParallaxLayer offset={i} speed={0.06} className="page-shell page-shell--back" />
-            <ParallaxLayer offset={i} speed={0.12} className="page-shell page-shell--mid" />
-            <ParallaxLayer offset={i} speed={0.18} className="page-shell page-shell--front" />
-          </React.Fragment>
-        ))}
+        {/* ═══════════════ INTRO PAGE ═══════════════ */}
+        <ParallaxLayer offset={0} speed={0.12} className="page-layer">
+          <div className="page-content page-content--intro">
+            <div className="intro-badge">THE EXPERIMENT</div>
 
-        {/* INTRO */}
-        <ParallaxLayer offset={0} speed={0.18} className="experiment-page experiment-page-intro">
-          <div className="page-inner">
-            <div className="page-topbar">
-              <span className="page-chip">THE EXPERIMENT</span>
+            <div className="intro-logo">
+              <QSTULogo />
             </div>
 
-            <div className="intro-center">
-              <div className="experiment-logo-wrap">
-                <QSTULogo />
-              </div>
+            <h1 className="intro-title">Experiments</h1>
+            <p className="intro-subtitle">
+              Side projects, explorations, and things I'm building in the open.
+            </p>
 
-              <h1 className="experiment-heading">Experiments</h1>
-              <p className="experiment-lead">Side projects, explorations, and things I'm building in the open.</p>
+            <nav className="intro-nav">
+              {PROJECTS.map((p, i) => (
+                <button
+                  key={p.id}
+                  className="intro-nav-btn"
+                  onClick={() => scrollToPage(i + 1)}
+                >
+                  {p.name}
+                </button>
+              ))}
+            </nav>
 
-              <div className="project-dots">
-                {PROJECTS.map((p, i) => (
-                  <button
-                    key={p.id}
-                    className="project-dot-btn"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      scrollToPage(i + 1)
-                    }}
-                  >
-                    {p.name}
-                  </button>
-                ))}
-              </div>
-
-              <div className="scroll-hint" onClick={() => scrollToPage(1)}>
-                <div className="scroll-arrow">↓</div>
-              </div>
-            </div>
+            <button
+              className="scroll-cue"
+              onClick={() => scrollToPage(1)}
+              aria-label="Scroll to first project"
+            >
+              <span className="scroll-cue-arrow">↓</span>
+            </button>
           </div>
         </ParallaxLayer>
 
-        {/* PROJECT PAGES */}
+        {/* ═══════════════ PROJECT PAGES ═══════════════ */}
         {PROJECTS.map((project, index) => {
-          const ProjectVisual = project.Visual
-          const page = index + 1
+          const pageOffset = index + 1
+          const Visual = project.Visual
 
           return (
             <React.Fragment key={project.id}>
-              <ParallaxLayer offset={page} speed={0.22} className="experiment-page">
-                <div className="page-inner">
-                  <div className="page-topbar">
-                    <button className="page-chip page-chip--ghost" onClick={() => scrollToPage(0)}>
-                      THE EXPERIMENT
+              {/* Content layer */}
+              <ParallaxLayer offset={pageOffset} speed={0.12} className="page-layer">
+                <div className="page-content page-content--project">
+                  <header className="project-header">
+                    <button className="header-back" onClick={() => scrollToPage(0)}>
+                      ← Experiments
                     </button>
 
-                    <div className="page-nav">
-                      {PROJECTS.map((p, i) => (
+                    <nav className="header-dots">
+                      {PROJECTS.map((_, i) => (
                         <button
-                          key={p.id}
-                          className={`nav-dot ${i === index ? 'active' : ''}`}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            scrollToPage(i + 1)
-                          }}
-                          aria-label={`Go to ${p.name}`}
+                          key={i}
+                          className={`dot ${i === index ? 'dot--active' : ''}`}
+                          onClick={() => scrollToPage(i + 1)}
+                          aria-label={`Go to project ${i + 1}`}
                         />
                       ))}
-                    </div>
-                  </div>
+                    </nav>
+                  </header>
 
                   <div className="project-grid">
-                    <div className="project-left">
+                    <div className="project-main">
                       <div className="project-copy">
                         <span className="project-tagline">{project.tagline}</span>
                         <h2 className="project-name">{project.name}</h2>
-                        <p className="project-description">{project.description}</p>
-
-                        <a className="project-cta" href={project.fullUrl} target="_blank" rel="noopener noreferrer">
-                          Explore full site →
-                        </a>
-                      </div>
-
-                      <div className="project-snippet">
-                        <ProjectVisual />
-                      </div>
-                    </div>
-
-                    <div className="project-right">
-                      <div className="project-iframe-container">
-                        <div className="iframe-header">
-                          <div className="iframe-dots">
-                            <span className="iframe-dot red" />
-                            <span className="iframe-dot yellow" />
-                            <span className="iframe-dot green" />
-                          </div>
-                          <span className="iframe-url">{project.url}</span>
-                        </div>
-
-                        <iframe src={project.fullUrl} title={project.name} className="project-iframe" loading="lazy" />
+                        <p className="project-desc">{project.description}</p>
 
                         <a
                           href={project.fullUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="iframe-overlay-link"
+                          className="project-cta"
+                        >
+                          Explore {project.name} →
+                        </a>
+                      </div>
+
+                      <div className="project-visual-wrap">
+                        <Visual />
+                      </div>
+                    </div>
+
+                    <div className="project-preview">
+                      <div className="preview-window">
+                        <div className="preview-titlebar">
+                          <div className="preview-dots">
+                            <span className="preview-dot preview-dot--red" />
+                            <span className="preview-dot preview-dot--yellow" />
+                            <span className="preview-dot preview-dot--green" />
+                          </div>
+                          <span className="preview-url">{project.url}</span>
+                        </div>
+
+                        <iframe
+                          src={project.fullUrl}
+                          title={project.name}
+                          className="preview-iframe"
+                          loading="lazy"
+                        />
+
+                        <a
+                          href={project.fullUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="preview-overlay"
                         >
                           Visit {project.url} →
                         </a>
@@ -360,7 +367,17 @@ export default function ExperimentTerminal() {
                 </div>
               </ParallaxLayer>
 
-              <ParallaxLayer offset={page} speed={-0.08} className="page-float-accent" />
+              {/* Accent layer */}
+              <ParallaxLayer offset={pageOffset} speed={-0.04} className="layer-accent">
+                <div
+                  className="accent-orb accent-orb--1"
+                  style={{ ['--hue' as any]: index * 40 } as React.CSSProperties}
+                />
+                <div
+                  className="accent-orb accent-orb--2"
+                  style={{ ['--hue' as any]: index * 40 + 180 } as React.CSSProperties}
+                />
+              </ParallaxLayer>
             </React.Fragment>
           )
         })}

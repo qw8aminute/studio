@@ -4,6 +4,8 @@ import Dock from './Dock'
 import CardStack from './Cardstack'
 import TerminalModal from '../Terminal/TerminalModal'
 import ExperimentTerminal from '../Terminal/CardComponents/ExperimentTerminal'
+import TheTemplates from '../Terminal/TheTemplates/TheTemplates'
+
 
 const MOBILE_BREAKPOINT = 768
 
@@ -53,6 +55,10 @@ export default function TileGrid() {
   {openCard?.title?.toUpperCase() === 'THE EXPERIMENT' ? (
     <div style={{ height: '100%', minHeight: 520, padding: 0, overflow: 'hidden' }}>
       <ExperimentTerminal />
+    </div>
+  ) : openCard?.title?.toUpperCase() === 'THE TEMPLATES' ? (
+    <div style={{ height: '100%', minHeight: 520, padding: 0, overflow: 'hidden' }}>
+      <TheTemplates />
     </div>
   ) : (
     <div
