@@ -64,11 +64,12 @@ export default function CardStack({ onCardSelect }: CardStackProps) {
   const [currentManipulation, setCurrentManipulation] = useState<number | null>(null)
   const [sessionThrows, setSessionThrows] = useState<ThrowRecord[]>([])
   const [isStatsOpen, setIsStatsOpen] = useState(false)
+  const [recordToast, setRecordToast] = useState<{ type: 'high' | 'low'; message: string } | null>(null)
   const lastTapTime = useRef<number>(0)
   const dragStartPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
 
   // Create card names map for stats display
-   const cardNames = new Map(cards.map(card => [card.id, card.title || card.id]))
+  const cardNames = new Map(cards.map(card => [card.id, card.id]))
 
   const [springs, api] = useSprings(cards.length, i => ({
     ...to(i),
@@ -137,6 +138,45 @@ export default function CardStack({ onCardSelect }: CardStackProps) {
         const distance = calculateDistance(vx, vy)
         const finalX = mx + vx * 800 * xDir
         const finalY = my + vy * 800 * yDir
+        
+        // Check for new records BEFORE updating history
+        // Need to look at persisted localStorage, not sessionThrows
+        const stored = localStorage.getItem('card-throw-history')
+        const history: Array<{ distance: number }> = stored ? JSON.parse(stored) : []
+        
+        let isNewHigh = false
+        let isNewLow = false
+        
+        if (history.length === 0) {
+          // First throw ever - always a record but only show high
+          isNewHigh = true
+        } else {
+          const longestEver = Math.max(...history.map(t => t.distance))
+          const shortestEver = Math.min(...history.map(t => t.distance))
+          
+          if (distance > longestEver) {
+            isNewHigh = true
+          }
+          
+          if (distance < shortestEver) {
+            isNewLow = true
+          }
+        }
+        
+        // Show toast for actual records only
+        if (isNewHigh) {
+          setRecordToast({
+            type: 'high',
+            message: `New Record! ${distance.toLocaleString()} ly`,
+          })
+          setTimeout(() => setRecordToast(null), 3000)
+        } else if (isNewLow) {
+          setRecordToast({
+            type: 'low',
+            message: `New Low: ${distance.toLocaleString()} ly`,
+          })
+          setTimeout(() => setRecordToast(null), 3000)
+        }
         
         // Update card state
         setCardStates(prev => {
@@ -257,6 +297,22 @@ export default function CardStack({ onCardSelect }: CardStackProps) {
       />
 
       <div className="card-stack-container">
+      {/* Supernova Record Toast */}
+      {recordToast && (
+        <div className={`record-toast ${recordToast.type}`}>
+          <div className="record-supernova">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.8"/>
+              <path d="M12 2v4M12 18v4M22 12h-4M6 12H2M19.07 4.93l-2.83 2.83M7.76 16.24l-2.83 2.83M19.07 19.07l-2.83-2.83M7.76 7.76L4.93 4.93" 
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              {/* Outer rays */}
+              <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1" opacity="0.3" className="pulse-ring"/>
+            </svg>
+          </div>
+          <div className="record-text">{recordToast.message}</div>
+        </div>
+      )}
+
       {/* Distance indicator */}
       {showDistance && (
         <div className="throw-distance-indicator">

@@ -211,6 +211,127 @@
   animation: distanceReveal 0.5s ease-out, distanceFadeOut 0.5s ease-in 2s forwards;
 }
 
+/* Supernova Record Toast */
+.record-toast {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2100;
+  pointer-events: none;
+  
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 12px;
+  border: 2px solid;
+  
+  animation: supernovaReveal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), supernovaFade 0.5s ease-in 2.5s forwards;
+}
+
+.record-toast.high {
+  border-color: rgba(6, 182, 212, 0.8);
+  box-shadow: 
+    0 0 30px rgba(6, 182, 212, 0.5),
+    0 0 60px rgba(6, 182, 212, 0.3);
+}
+
+.record-toast.low {
+  border-color: rgba(251, 191, 36, 0.8);
+  box-shadow: 
+    0 0 30px rgba(251, 191, 36, 0.5),
+    0 0 60px rgba(251, 191, 36, 0.3);
+}
+
+.record-supernova {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: supernovaSpin 2s linear infinite;
+}
+
+.record-toast.high .record-supernova {
+  color: rgba(6, 182, 212, 1);
+}
+
+.record-toast.low .record-supernova {
+  color: rgba(251, 191, 36, 1);
+}
+
+.pulse-ring {
+  animation: pulsateRing 1.5s ease-out infinite;
+}
+
+.record-text {
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.record-toast.high .record-text {
+  color: rgba(6, 182, 212, 1);
+  text-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+}
+
+.record-toast.low .record-text {
+  color: rgba(251, 191, 36, 1);
+  text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+}
+
+@keyframes supernovaReveal {
+  0% {
+    transform: translateX(-50%) scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.15);
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes supernovaFade {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.8);
+  }
+}
+
+@keyframes supernovaSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulsateRing {
+  0% {
+    r: 8;
+    opacity: 0.3;
+  }
+  50% {
+    r: 10;
+    opacity: 0.1;
+  }
+  100% {
+    r: 8;
+    opacity: 0.3;
+  }
+}
+
+/* Distance indicator */
+
 .distance-value {
   font-size: 4rem;
   font-weight: 700;
@@ -382,6 +503,19 @@
     font-size: 0.65rem;
     padding: 0.5rem 0.75rem;
   }
+
+  .record-toast {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .record-supernova svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .record-text {
+    font-size: 1rem;
+  }
 }
 
 @media (max-height: 700px) {
@@ -448,6 +582,18 @@
   }
   
   .distance-value {
+    animation: none;
+  }
+
+  .record-toast {
+    animation: none;
+  }
+
+  .record-supernova {
+    animation: none;
+  }
+
+  .pulse-ring {
     animation: none;
   }
 }
