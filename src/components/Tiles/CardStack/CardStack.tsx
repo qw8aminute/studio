@@ -1,11 +1,19 @@
 import { useState, useCallback, useRef } from 'react'
 import { useSprings, animated, to as interpolate } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
-import { TAROT_CARDS } from '../../types'
+import { TAROT_CARDS } from '../../../types'
+import StatsButton from './StatsButton'
+import StatsModal from './StatsModal'
 import './CardStack.css'
 
 interface CardStackProps {
   onCardSelect: (cardId: string) => void
+}
+
+interface ThrowRecord {
+  cardId: string
+  distance: number
+  angle: number
 }
 
 interface CardState {
@@ -54,8 +62,13 @@ export default function CardStack({ onCardSelect }: CardStackProps) {
   )
   const [showDistance, setShowDistance] = useState<{ index: number; distance: number } | null>(null)
   const [currentManipulation, setCurrentManipulation] = useState<number | null>(null)
+  const [sessionThrows, setSessionThrows] = useState<ThrowRecord[]>([])
+  const [isStatsOpen, setIsStatsOpen] = useState(false)
   const lastTapTime = useRef<number>(0)
   const dragStartPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
+
+  // Create card names map for stats display
+   const cardNames = new Map(cards.map(card => [card.id, card.title || card.id]))
 
   const [springs, api] = useSprings(cards.length, i => ({
     ...to(i),
@@ -131,6 +144,13 @@ export default function CardStack({ onCardSelect }: CardStackProps) {
           newStates[index] = { gone: true, distance, angle: throwAngle }
           return newStates
         })
+
+        // Record throw in session stats
+        setSessionThrows(prev => [...prev, {
+          cardId: cards[index].id,
+          distance,
+          angle: throwAngle,
+        }])
 
         // Show distance indicator
         setShowDistance({ index, distance })
@@ -221,7 +241,22 @@ export default function CardStack({ onCardSelect }: CardStackProps) {
   )
 
   return (
-    <div className="card-stack-container">
+    <>
+      {/* Stats Button */}
+      <StatsButton 
+        onClick={() => setIsStatsOpen(true)}
+        throwCount={sessionThrows.length}
+      />
+
+      {/* Stats Modal */}
+      <StatsModal
+        isOpen={isStatsOpen}
+        onClose={() => setIsStatsOpen(false)}
+        currentSessionThrows={sessionThrows}
+        cardNames={cardNames}
+      />
+
+      <div className="card-stack-container">
       {/* Distance indicator */}
       {showDistance && (
         <div className="throw-distance-indicator">
@@ -319,5 +354,6 @@ export default function CardStack({ onCardSelect }: CardStackProps) {
         </div>
       )}
     </div>
+    </>
   )
 }

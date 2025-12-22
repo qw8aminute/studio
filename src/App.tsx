@@ -18,7 +18,6 @@ import ContactTerminal from './components/Terminal/Screens/ContactTerminal'
 import ResumeTerminal from './components/Terminal/Screens/ResumeTerminal'
 import MiniTemplatesLanding from './pages/sections/MiniTemplatesLanding'
 
-
 type Panel = 'about' | 'contact' | 'resume' | 'templates' | 'linkedin404' | null
 
 export default function App() {
@@ -54,7 +53,7 @@ export default function App() {
         <Route path="/experiments" element={<ExperimentsLanding />} />
       </Routes>
 
-      {/* One terminal shell, multiple screens */}
+      {/* Global terminal shell for header panels */}
       <TerminalModal
         isOpen={panel !== null}
         title={title}

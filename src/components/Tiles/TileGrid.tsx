@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { TAROT_CARDS } from '../../types'
 import Dock from './Dock'
-import CardStack from './Cardstack'
+import CardStack from './CardStack'
 import TerminalModal from '../Terminal/TerminalModal'
 import ExperimentTerminal from '../Terminal/CardComponents/ExperimentTerminal'
 import TheTemplates from '../Terminal/TheTemplates/TheTemplates'
