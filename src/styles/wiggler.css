@@ -1,0 +1,253 @@
+.wiggler-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  cursor: none;
+  z-index: 1000;
+}
+
+.wiggler-container.chaos {
+  animation: containerShake 0.1s infinite;
+}
+
+@keyframes containerShake {
+  0%, to {
+    transform: translate(0);
+  }
+  25% {
+    transform: translate(-2px, 2px);
+  }
+  50% {
+    transform: translate(2px, -2px);
+  }
+  75% {
+    transform: translate(-2px, -2px);
+  }
+}
+
+.wiggler-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.intensity-meter {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 200px;
+  background: #0000004d;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1001;
+}
+
+.intensity-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: height 0.1s ease-out;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 0 20px currentColor;
+}
+
+.intensity-threshold {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ff0;
+  box-shadow: 0 0 10px #ff0;
+}
+
+.shake-text {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: Impact, Arial Black, sans-serif;
+  font-size: clamp(60px, 15vw, 200px);
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff, 0 0 60px #00ffff, 0 0 80px #00ffff, 4px 4px 0 #000, -4px -4px 0 #000;
+  z-index: 1002;
+  pointer-events: none;
+  animation: shakeText 0.05s infinite;
+  letter-spacing: 0.1em;
+}
+
+@keyframes shakeText {
+  0% {
+    transform: translate(-50%, -50%) rotate(-2deg) scale(1);
+  }
+  25% {
+    transform: translate(-48%, -52%) rotate(2deg) scale(1.05);
+  }
+  50% {
+    transform: translate(-52%, -48%) rotate(-1deg) scale(0.98);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(1deg) scale(1.02);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-2deg) scale(1);
+  }
+}
+
+.exit-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  font-family: "Press Start 2P", monospace, system-ui;
+  font-size: 10px;
+  background: #000000b3;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1003;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.exit-button:hover {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0 20px #ffffff80;
+}
+
+.warning-overlay {
+  position: fixed;
+  inset: 0;
+  background: #f5e6d3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeInWarning 0.5s ease;
+}
+
+@keyframes fadeInWarning {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.warning-content {
+  text-align: center;
+  max-width: 400px;
+  padding: 0;
+  background: transparent;
+}
+
+.warning-stripes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+}
+
+.stripe-line {
+  height: 3px;
+  background: #1a1a1a;
+  width: 100%;
+}
+
+.warning-text-box {
+  background: #f5e6d3;
+  padding: 25px 40px;
+  border-left: 3px solid #1a1a1a;
+  border-right: 3px solid #1a1a1a;
+}
+
+.warning-english {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.warning-kanji {
+  font-family: Hiragino Sans, Microsoft YaHei, sans-serif;
+  font-size: 13px;
+  color: #1a1a1a;
+  letter-spacing: 0.1em;
+}
+
+.accept-button {
+  margin-top: 40px;
+  padding: 12px 30px;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  background: #1a1a1a;
+  color: #f5e6d3;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.accept-button:hover {
+  background: #333;
+  transform: scale(1.02);
+}
+
+.accept-button:active {
+  transform: scale(0.98);
+}
+
+.wiggler-container.chaos .exit-button {
+  animation: buttonChaos 0.2s infinite;
+}
+
+@keyframes buttonChaos {
+  0% {
+    border-color: #ff0;
+    color: #ff0;
+    text-shadow: 0 0 10px #ff0;
+  }
+  33% {
+    border-color: #0ff;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff;
+  }
+  66% {
+    border-color: #f0f;
+    color: #f0f;
+    text-shadow: 0 0 10px #f0f;
+  }
+  to {
+    border-color: #ff0;
+    color: #ff0;
+    text-shadow: 0 0 10px #ff0;
+  }
+}
+
+.wiggler-container.chaos .intensity-meter {
+  border-color: #fff;
+  animation: meterPulse 0.3s infinite;
+}
+
+@keyframes meterPulse {
+  0%, to {
+    box-shadow: 0 0 20px #f0fc;
+  }
+  50% {
+    box-shadow: 0 0 40px #0ffc;
+  }
+}

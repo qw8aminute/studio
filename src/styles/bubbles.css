@@ -1,0 +1,227 @@
+.bubble-palette {
+  position: fixed;
+  left: 16px;
+  top: 80px;
+  width: 200px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px #00000026;
+  overflow: hidden;
+  z-index: 100;
+  animation: slideDown 0.3s ease;
+}
+
+.bubble-palette-header {
+  padding: 14px 16px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+}
+
+.bubble-palette-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.bubble-palette-header p {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.bubble-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 12px;
+}
+
+.bubble-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 2px solid #e5e7eb;
+  background: #fafafa;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bubble-option:hover {
+  border-color: var(--primary);
+  background: #6366f10d;
+  transform: translateY(-2px);
+}
+
+.bubble-preview {
+  width: 60px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bubble-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bubble-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.bubble-icon {
+  font-size: 12px;
+}
+
+.bubble-editor-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.bubble-item {
+  position: absolute;
+  pointer-events: all;
+  cursor: move;
+  user-select: none;
+}
+
+.bubble-item.selected {
+  z-index: 51;
+}
+
+.bubble-item.selected:before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 2px dashed var(--primary);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.bubble-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.bubble-text-container {
+  position: absolute;
+  inset: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.bubble-text {
+  font-family: Comic Sans MS, Comic Neue, cursive, sans-serif;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.bubble-textarea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  font-family: Comic Sans MS, Comic Neue, cursive, sans-serif;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #333;
+  text-align: center;
+  resize: none;
+  outline: none;
+  pointer-events: all;
+}
+
+.bubble-textarea::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.bubble-handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--primary);
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px #0003;
+  transition: transform 0.15s ease;
+}
+
+.bubble-handle:hover {
+  transform: scale(1.2);
+}
+
+.resize-handle {
+  bottom: -7px;
+  right: -7px;
+  cursor: se-resize;
+}
+
+.rotate-handle {
+  top: -20px;
+  left: 50%;
+  transform: translate(-50%);
+  cursor: grab;
+  background: var(--accent);
+}
+
+.rotate-handle:active {
+  cursor: grabbing;
+}
+
+.bubble-delete-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: var(--danger);
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px #ef444466;
+  transition: transform 0.15s ease;
+}
+
+.bubble-delete-btn:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .bubble-palette {
+    inset: auto 8px 80px;
+    width: auto;
+  }
+  .bubble-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .bubble-preview {
+    width: 50px;
+    height: 38px;
+  }
+}
