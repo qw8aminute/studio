@@ -1,0 +1,624 @@
+/* CardStack.css */
+
+.card-stack-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 55vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  perspective: 2000px;
+  perspective-origin: center center;
+}
+
+.card-stack-wrapper {
+  position: absolute;
+  width: 260px;
+  height: 400px;
+  will-change: transform, opacity;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  transform-style: preserve-3d;
+}
+
+.card-stack-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: var(--qd-forest, #1a2f2a);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 16px;
+  will-change: transform;
+  cursor: grab;
+  touch-action: none;
+  transform-style: preserve-3d;
+  
+  /* Base glow */
+  box-shadow: 
+    0 0 0 1px rgba(6, 182, 212, 0.5),
+    0 0 20px rgba(6, 182, 212, 0.3),
+    0 0 40px rgba(6, 182, 212, 0.2),
+    0 0 80px rgba(6, 182, 212, 0.1),
+    0 20px 50px rgba(0, 0, 0, 0.5);
+  
+  transition: box-shadow 0.3s ease;
+}
+
+.card-stack-card:active,
+.card-stack-card.manipulating {
+  cursor: grabbing;
+  box-shadow: 
+    0 0 0 2px rgba(6, 182, 212, 0.8),
+    0 0 30px rgba(6, 182, 212, 0.5),
+    0 0 60px rgba(6, 182, 212, 0.4),
+    0 0 100px rgba(6, 182, 212, 0.3),
+    0 0 150px rgba(6, 182, 212, 0.2),
+    0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* Animated shine sweep */
+.card-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.card-shine::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(6, 182, 212, 0.2) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    transparent 65%,
+    transparent 100%
+  );
+  transform: rotate(25deg) translateX(-100%);
+  animation: shineSweep var(--shine-duration, 6800ms) ease-in-out infinite;
+  animation-delay: var(--shine-delay, 0ms);
+}
+
+@keyframes shineSweep {
+  0% {
+    transform: rotate(25deg) translateX(-100%);
+  }
+  100% {
+    transform: rotate(25deg) translateX(100%);
+  }
+}
+
+/* Glowing animated border */
+.card-glow-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  z-index: 1;
+  pointer-events: none;
+  padding: 2px;
+  
+  background: linear-gradient(
+    90deg,
+    rgba(6, 182, 212, 0.8) 0%,
+    rgba(34, 211, 238, 0.4) 25%,
+    rgba(6, 182, 212, 0.1) 50%,
+    rgba(34, 211, 238, 0.4) 75%,
+    rgba(6, 182, 212, 0.8) 100%
+  );
+  background-size: 300% 100%;
+  animation: borderFlow var(--border-duration, 5800ms) linear infinite;
+  animation-delay: var(--border-delay, 0ms);
+  
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+@keyframes borderFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+.card-glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(6, 182, 212, 0.5) 0%,
+    rgba(34, 211, 238, 0.2) 25%,
+    rgba(6, 182, 212, 0.05) 50%,
+    rgba(34, 211, 238, 0.2) 75%,
+    rgba(6, 182, 212, 0.5) 100%
+  );
+  background-size: 300% 100%;
+  animation: borderFlow var(--border-duration, 5800ms) linear infinite;
+  animation-delay: var(--border-delay, 0ms);
+  filter: blur(8px);
+  z-index: -1;
+}
+
+/* Manipulation hint overlay */
+.manipulation-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: rgba(6, 182, 212, 0.9);
+  pointer-events: none;
+  z-index: 10;
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+.hint-line {
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.02em;
+  text-shadow: 
+    0 0 20px rgba(6, 182, 212, 0.8),
+    0 0 40px rgba(6, 182, 212, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hint-subtext {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  opacity: 0.7;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  letter-spacing: 0.05em;
+}
+
+/* Distance indicator */
+.throw-distance-indicator {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 2000;
+  pointer-events: none;
+  animation: distanceReveal 0.5s ease-out, distanceFadeOut 0.5s ease-in 2s forwards;
+}
+
+/* Supernova Record Toast */
+.record-toast {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2100;
+  pointer-events: none;
+  
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 12px;
+  border: 2px solid;
+  
+  animation: supernovaReveal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), supernovaFade 0.5s ease-in 2.5s forwards;
+}
+
+.record-toast.high {
+  border-color: rgba(6, 182, 212, 0.8);
+  box-shadow: 
+    0 0 30px rgba(6, 182, 212, 0.5),
+    0 0 60px rgba(6, 182, 212, 0.3);
+}
+
+.record-toast.low {
+  border-color: rgba(251, 191, 36, 0.8);
+  box-shadow: 
+    0 0 30px rgba(251, 191, 36, 0.5),
+    0 0 60px rgba(251, 191, 36, 0.3);
+}
+
+.record-supernova {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: supernovaSpin 2s linear infinite;
+}
+
+.record-toast.high .record-supernova {
+  color: rgba(6, 182, 212, 1);
+}
+
+.record-toast.low .record-supernova {
+  color: rgba(251, 191, 36, 1);
+}
+
+.pulse-ring {
+  animation: pulsateRing 1.5s ease-out infinite;
+}
+
+.record-text {
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.record-toast.high .record-text {
+  color: rgba(6, 182, 212, 1);
+  text-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+}
+
+.record-toast.low .record-text {
+  color: rgba(251, 191, 36, 1);
+  text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+}
+
+@keyframes supernovaReveal {
+  0% {
+    transform: translateX(-50%) scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.15);
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes supernovaFade {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.8);
+  }
+}
+
+@keyframes supernovaSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulsateRing {
+  0% {
+    r: 8;
+    opacity: 0.3;
+  }
+  50% {
+    r: 10;
+    opacity: 0.1;
+  }
+  100% {
+    r: 8;
+    opacity: 0.3;
+  }
+}
+
+/* Distance indicator */
+
+.distance-value {
+  font-size: 4rem;
+  font-weight: 700;
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 1) 0%,
+    rgba(34, 211, 238, 1) 50%,
+    rgba(6, 182, 212, 1) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(6, 182, 212, 0.8));
+  animation: numberPulse 0.3s ease-out;
+}
+
+.distance-label {
+  font-size: 0.875rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: rgba(6, 182, 212, 0.8);
+  letter-spacing: 0.1em;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+}
+
+.distance-particles {
+  position: absolute;
+  inset: -100px;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(6, 182, 212, 0.8);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  animation: particleExplode 1.5s ease-out forwards;
+  animation-delay: var(--particle-delay, 0s);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+}
+
+@keyframes distanceReveal {
+  0% {
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes distanceFadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes numberPulse {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes particleExplode {
+  0% {
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateX(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateX(150px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Throw stats */
+.throw-stats {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(26, 47, 42, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  color: rgba(6, 182, 212, 0.9);
+  z-index: 100;
+  animation: statsSlideIn 0.3s ease-out;
+}
+
+.stat-line {
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.stat-line + .stat-line {
+  margin-top: 0.25rem;
+  opacity: 0.7;
+}
+
+@keyframes statsSlideIn {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Enhanced hint text */
+.card-stack-hint {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  animation: hintPulse 5s ease-in-out infinite;
+  text-align: center;
+  max-width: 90%;
+}
+
+.hint-action {
+  color: rgba(6, 182, 212, 0.8);
+  font-weight: 600;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* Responsive sizing */
+@media (max-width: 400px) {
+  .card-stack-wrapper {
+    width: 220px;
+    height: 340px;
+  }
+  
+  .distance-value {
+    font-size: 3rem;
+  }
+  
+  .card-stack-hint {
+    font-size: 0.65rem;
+  }
+  
+  .throw-stats {
+    font-size: 0.65rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .record-toast {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .record-supernova svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .record-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-height: 700px) {
+  .card-stack-container {
+    height: 50vh;
+  }
+  
+  .card-stack-wrapper {
+    width: 200px;
+    height: 310px;
+  }
+  
+  .distance-value {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-height: 600px) {
+  .throw-distance-indicator {
+    top: 10%;
+  }
+  
+  .distance-value {
+    font-size: 2rem;
+  }
+  
+  .distance-label {
+    font-size: 0.65rem;
+  }
+}
+
+/* Landscape optimization */
+@media (orientation: landscape) and (max-height: 500px) {
+  .card-stack-container {
+    height: 70vh;
+  }
+  
+  .throw-stats {
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.65rem;
+    padding: 0.5rem;
+  }
+  
+  .card-stack-hint {
+    bottom: 0.5rem;
+    font-size: 0.65rem;
+  }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .card-shine::before,
+  .card-glow-border,
+  .card-glow-border::before,
+  .manipulation-hint,
+  .card-stack-hint,
+  .particle {
+    animation: none;
+  }
+  
+  .throw-distance-indicator {
+    animation: none;
+  }
+  
+  .distance-value {
+    animation: none;
+  }
+
+  .record-toast {
+    animation: none;
+  }
+
+  .record-supernova {
+    animation: none;
+  }
+
+  .pulse-ring {
+    animation: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .card-stack-card {
+    box-shadow: 
+      0 0 0 2px rgba(6, 182, 212, 1),
+      0 20px 50px rgba(0, 0, 0, 0.9);
+  }
+  
+  .card-glow-border {
+    padding: 3px;
+  }
+}
+
+/* Touch feedback enhancement for iOS */
+@supports (-webkit-touch-callout: none) {
+  .card-stack-card:active {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .card-stack-wrapper {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}

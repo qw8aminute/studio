@@ -1,0 +1,255 @@
+/* AboutTerminal.css */
+
+.about-terminal {
+  --about-bg: #0a0f14;
+  --about-surface: rgba(15, 23, 35, 0.6);
+  --about-border: rgba(8, 145, 178, 0.2);
+  --about-text: #f2efe8;
+  --about-text-dim: rgba(242, 239, 232, 0.6);
+  --about-accent: #06b6d4;
+  --about-accent-dim: rgba(6, 182, 212, 0.4);
+  
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--about-text);
+  line-height: 1.5;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.about-terminal.mounted {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Icons */
+.about-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  stroke: var(--about-accent);
+  transition: stroke 0.2s ease, transform 0.2s ease;
+}
+
+/* Header */
+.about-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--about-border);
+  margin-bottom: 1.5rem;
+}
+
+.about-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--about-surface);
+  border: 2px solid var(--about-border);
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-avatar:hover {
+  border-color: var(--about-accent);
+  box-shadow: 0 0 20px var(--about-accent-dim);
+}
+
+.about-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Center on face - adjust these values if needed */
+  object-position: center 15%;
+}
+
+.about-intro {
+  flex: 1;
+}
+
+.about-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, var(--about-text) 0%, var(--about-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-location {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+  color: var(--about-text-dim);
+  font-size: 0.9rem;
+}
+
+.about-location .about-icon {
+  width: 14px;
+  height: 14px;
+  stroke: var(--about-accent-dim);
+}
+
+/* Sections */
+.about-section {
+  margin-bottom: 1.5rem;
+}
+
+.about-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--about-accent);
+  margin: 0 0 0.75rem 0;
+}
+
+/* Mission */
+.about-mission {
+  font-size: 1.1rem;
+  color: var(--about-text);
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* Beliefs */
+.about-beliefs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.belief-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--about-surface);
+  border: 1px solid var(--about-border);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  animation: fadeInUp 0.4s ease forwards;
+  opacity: 0;
+}
+
+.about-terminal.mounted .belief-item {
+  opacity: 1;
+}
+
+.belief-item:hover {
+  border-color: var(--about-accent-dim);
+  transform: translateX(4px);
+}
+
+.belief-icon {
+  margin-top: 0.1rem;
+}
+
+.belief-icon .about-icon {
+  width: 18px;
+  height: 18px;
+  stroke: var(--about-accent-dim);
+}
+
+.belief-item:hover .belief-icon .about-icon {
+  stroke: var(--about-accent);
+}
+
+.belief-text {
+  font-size: 0.9rem;
+  color: var(--about-text-dim);
+  line-height: 1.4;
+}
+
+/* Personal */
+.about-personal {
+  padding-top: 1rem;
+  border-top: 1px solid var(--about-border);
+}
+
+.personal-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--about-text-dim);
+  font-style: italic;
+}
+
+.personal-item .about-icon {
+  width: 16px;
+  height: 16px;
+  stroke: #f472b6;
+}
+
+/* Footer */
+.about-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--about-border);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+}
+
+.prompt-symbol {
+  color: var(--about-accent);
+}
+
+.prompt-path {
+  color: var(--about-text-dim);
+}
+
+.prompt-cursor {
+  color: var(--about-accent);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .about-terminal {
+    padding: 1.5rem;
+  }
+
+  .about-avatar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .about-name {
+    font-size: 1.25rem;
+  }
+
+  .about-mission {
+    font-size: 1rem;
+  }
+}

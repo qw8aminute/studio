@@ -1,0 +1,191 @@
+.card-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.card-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Desaturate and adjust brightness for duotone base */
+  filter: grayscale(100%) contrast(1.2) brightness(0.9);
+}
+
+/* Duotone overlay: cosmic navy shadows → cyan highlights */
+.duotone-filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(11, 18, 32, 0.5) 0%,
+    rgba(6, 182, 212, 0.3) 100%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.8;
+}
+
+/* Cyan tint overlay */
+.card-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(6, 182, 212, 0.15);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* ========== ELECTRIC EFFECTS ========== */
+
+/* Animated shine sweep */
+.card-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-wrapper:hover .card-shine {
+  opacity: 1;
+}
+
+.card-shine::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.2) 45%,
+    rgba(6, 182, 212, 0.25) 50%,
+    rgba(255, 255, 255, 0.2) 55%,
+    transparent 65%,
+    transparent 100%
+  );
+  transform: rotate(25deg) translateX(-100%);
+  animation: none;
+}
+
+.card-shine{
+  opacity: 0.55; /* subtle idle presence */
+}
+
+/* always animating, but each card has different delay/duration */
+.card-shine::before{
+  animation: shineSweep var(--shine-dur, 2.2s) ease-in-out infinite;
+  animation-delay: var(--shine-delay, 0s);
+}
+
+/* if you want: stronger shine only when hovered */
+.dock-card:hover .card-shine{ opacity: 1; }
+
+.card-wrapper:hover .card-shine::before {
+  animation: shineSweep 1.5s ease-in-out infinite;
+}
+
+@keyframes shineSweep {
+  0% {
+    transform: rotate(25deg) translateX(-100%);
+  }
+  100% {
+    transform: rotate(25deg) translateX(100%);
+  }
+}
+
+/* Flowing border glow */
+.card-glow-border {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 10;
+  pointer-events: none;
+  padding: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  background: linear-gradient(
+    90deg,
+    rgba(6, 182, 212, 0.9) 0%,
+    rgba(34, 211, 238, 0.5) 25%,
+    rgba(6, 182, 212, 0.2) 50%,
+    rgba(34, 211, 238, 0.5) 75%,
+    rgba(6, 182, 212, 0.9) 100%
+  );
+  background-size: 300% 100%;
+  
+  /* Mask to create border effect */
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+.card-wrapper:hover .card-glow-border {
+  opacity: 1;
+  animation: borderFlow 2s linear infinite;
+}
+
+@keyframes borderFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+/* Outer glow halo on hover */
+.card-glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    rgba(6, 182, 212, 0.4) 0%,
+    rgba(34, 211, 238, 0.15) 25%,
+    rgba(6, 182, 212, 0.05) 50%,
+    rgba(34, 211, 238, 0.15) 75%,
+    rgba(6, 182, 212, 0.4) 100%
+  );
+  background-size: 300% 100%;
+  filter: blur(10px);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-wrapper:hover .card-glow-border::before {
+  opacity: 1;
+  animation: borderFlow 2s linear infinite;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .card-shine::before,
+  .card-glow-border,
+  .card-glow-border::before {
+    animation: none !important;
+  }
+}

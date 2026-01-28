@@ -1,0 +1,134 @@
+:root {
+  /* QD Studio Color System - Cosmic Theme */
+  --qd-blue: #1E3A8A;
+  --qd-teal: #0891B2;
+  --qd-cyan: #06B6D4;
+  --qd-dark: #0F172A;
+  --qd-darker: #0b1220;    /* cosmic navy */
+  --qd-light: #F8FAFC;
+  --qd-bone: #f2efe8;      /* bone / eggshell */
+  
+  /* Spacing */
+  --header-height: 80px;
+  --section-padding: 120px;
+  
+  /* Animation */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--qd-darker);
+  color: var(--qd-light);
+  overflow-x: hidden;
+}
+
+code {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono',
+    'Courier New', monospace;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s var(--ease-smooth);
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  min-height: 100vh;
+  padding: var(--section-padding) 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--qd-darker);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--qd-blue);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--qd-teal);
+}
+
+/* Add this to the bottom of index.css - REPLACE the existing @media print section */
+
+@media print {
+  /* Reset body for print */
+  body {
+    background: #ffffff !important;
+    overflow: visible !important;
+  }
+
+  /* Hide the main site elements */
+  .hero,
+  .dock,
+  .tile-grid,
+  .force-graph,
+  .background,
+  .duality-canvas,
+  header:not(.resume-header),
+  [class*="card-stack"],
+  [class*="liquid-tile"] {
+    display: none !important;
+  }
+
+  /* Let the terminal canvas flow naturally */
+  .terminal-canvas {
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    display: block !important;
+  }
+
+  /* Remove any fixed/absolute positioning that might cause issues */
+  #root {
+    position: static !important;
+    overflow: visible !important;
+  }
+}

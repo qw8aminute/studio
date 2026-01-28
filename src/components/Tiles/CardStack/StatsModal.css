@@ -1,0 +1,380 @@
+/* StatsModal.css */
+
+.stats-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+  animation: overlayFadeIn 0.2s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.stats-modal-content {
+  background: linear-gradient(135deg, rgba(26, 47, 42, 0.98) 0%, rgba(20, 37, 34, 0.98) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 
+    0 0 0 1px rgba(6, 182, 212, 0.2),
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(6, 182, 212, 0.1);
+  animation: modalSlideUp 0.3s ease-out;
+}
+
+@keyframes modalSlideUp {
+  0% { transform: translateY(20px) scale(0.95); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Header */
+.stats-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(6, 182, 212, 0.15);
+}
+
+.stats-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.stats-modal-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.stats-modal-close:hover {
+  background: rgba(6, 182, 212, 0.1);
+  color: rgba(6, 182, 212, 0.9);
+}
+
+/* Summary Stats - 3x1 Table */
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: 1.5rem;
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stat-cell {
+  background: rgba(26, 47, 42, 0.8);
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  color: rgba(6, 182, 212, 0.95);
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* Sections */
+.stats-section {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.stats-section + .stats-section {
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(6, 182, 212, 0.15);
+}
+
+.stats-section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 1rem 0;
+  letter-spacing: 0.01em;
+}
+
+/* Current Round */
+.current-round {
+  background: rgba(6, 182, 212, 0.05);
+  border-radius: 8px;
+  padding: 1rem 1.5rem !important;
+  margin: 1.5rem;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+.round-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.round-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.8125rem;
+}
+
+.round-stat-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.round-stat-values {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+
+.round-stat-current {
+  color: rgba(6, 182, 212, 0.95);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.round-stat-best {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+}
+
+/* Podium */
+.podium {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.podium-place {
+  background: rgba(6, 182, 212, 0.05);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 8px;
+  padding: 1rem 0.75rem;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.podium-place:hover {
+  background: rgba(6, 182, 212, 0.08);
+  transform: translateY(-2px);
+}
+
+.place-1 {
+  border-color: rgba(6, 182, 212, 0.4);
+}
+
+.podium-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.podium-rank {
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.podium-distance {
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  color: rgba(6, 182, 212, 0.95);
+  margin-bottom: 0.5rem;
+}
+
+.podium-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  font-size: 0.6875rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Empty State */
+.empty-state {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.875rem;
+}
+
+/* Actions - 2x1 */
+.stats-actions {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(6, 182, 212, 0.15);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.share-button,
+.clear-button {
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+.share-button {
+  background: rgba(6, 182, 212, 0.15);
+  color: rgba(6, 182, 212, 0.95);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.share-button:hover:not(:disabled) {
+  background: rgba(6, 182, 212, 0.25);
+  border-color: rgba(6, 182, 212, 0.5);
+  transform: translateY(-1px);
+}
+
+.share-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.clear-button {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.clear-button:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.15);
+  color: rgba(239, 68, 68, 0.9);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.clear-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .stats-summary {
+    grid-template-columns: 1fr;
+    margin: 1.25rem;
+  }
+
+  .stat-value {
+    font-size: 1.375rem;
+  }
+
+  .stat-label {
+    font-size: 0.6875rem;
+  }
+
+  .podium {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .stats-modal-content {
+    border-radius: 12px;
+  }
+
+  .stats-modal-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .stats-modal-title {
+    font-size: 1.125rem;
+  }
+
+  .stats-summary {
+    margin: 1rem;
+  }
+
+  .stats-section {
+    padding: 0 1.25rem 1.25rem;
+  }
+
+  .current-round {
+    margin: 1rem;
+    padding: 0.875rem 1.25rem !important;
+  }
+}
+
+/* Scrollbar */
+.stats-modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stats-modal-content::-webkit-scrollbar-track {
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.stats-modal-content::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.3);
+  border-radius: 3px;
+}
+
+.stats-modal-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.5);
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .stats-modal-overlay,
+  .stats-modal-content,
+  .podium-place,
+  .share-button,
+  .clear-button {
+    animation: none;
+    transition: none;
+  }
+}

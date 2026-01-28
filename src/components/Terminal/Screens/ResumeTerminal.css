@@ -1,0 +1,840 @@
+/* ResumeTerminal.css — Unified with AboutTerminal design system */
+
+.resume-terminal {
+  /* Exact tokens from AboutTerminal */
+  --rt-bg: #0a0f14;
+  --rt-surface: rgba(15, 23, 35, 0.6);
+  --rt-border: rgba(8, 145, 178, 0.2);
+  --rt-text: #f2efe8;
+  --rt-text-dim: rgba(242, 239, 232, 0.6);
+  --rt-accent: #06b6d4;
+  --rt-accent-dim: rgba(6, 182, 212, 0.4);
+  
+  /* Accent palette */
+  --rt-teal: #06b6d4;
+  --rt-violet: #8b5cf6;
+  --rt-coral: #f87171;
+  --rt-amber: #f59e0b;
+  --rt-cyan: #22d3ee;
+  --rt-slate: #64748b;
+  
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--rt-text);
+  line-height: 1.5;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--rt-bg);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.resume-terminal.mounted {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =====================================================
+   ACTION BAR
+   ===================================================== */
+.resume-action-bar {
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--rt-border);
+  background: var(--rt-bg);
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.resume-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: linear-gradient(135deg, var(--rt-accent), #0891b2);
+  color: #0a0f14;
+  border: none;
+  border-radius: 6px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+}
+
+.resume-download-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.4);
+}
+
+.resume-download-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.download-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #0a0f14;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =====================================================
+   SCROLLABLE CONTENT
+   ===================================================== */
+.resume-paper {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  background: var(--rt-bg);
+  scrollbar-width: thin;
+  scrollbar-color: var(--rt-accent-dim) transparent;
+}
+
+.resume-paper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.resume-paper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.resume-paper::-webkit-scrollbar-thumb {
+  background: var(--rt-accent-dim);
+  border-radius: 3px;
+}
+
+.resume-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+.resume-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rt-border);
+  margin-bottom: 1.5rem;
+}
+
+.resume-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--rt-surface);
+  border: 2px solid var(--rt-border);
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.resume-avatar:hover {
+  border-color: var(--rt-accent);
+  box-shadow: 0 0 20px var(--rt-accent-dim);
+}
+
+.resume-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.resume-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.resume-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, var(--rt-text) 0%, var(--rt-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.resume-tagline {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: var(--rt-text-dim);
+  margin: 0.25rem 0 0.5rem 0;
+  letter-spacing: 0.02em;
+}
+
+.resume-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.resume-contact a,
+.contact-link {
+  color: var(--rt-accent);
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.resume-contact a:hover,
+.contact-link:hover {
+  color: var(--rt-text);
+}
+
+.resume-contact span {
+  color: var(--rt-text-dim);
+}
+
+.contact-sep {
+  color: var(--rt-border);
+}
+
+/* =====================================================
+   SECTIONS
+   ===================================================== */
+.resume-section {
+  margin-bottom: 1.5rem;
+}
+
+.resume-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--rt-accent);
+  margin: 0 0 0.75rem 0;
+}
+
+/* =====================================================
+   SUMMARY
+   ===================================================== */
+.summary-text {
+  font-size: 0.95rem;
+  color: var(--rt-text);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* =====================================================
+   EXPERIENCE CARDS
+   ===================================================== */
+.exp-card {
+  padding: 0.75rem 1rem;
+  background: var(--rt-surface);
+  border: 1px solid var(--rt-border);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.exp-card:last-child {
+  margin-bottom: 0;
+}
+
+.exp-card:hover {
+  border-color: var(--rt-accent-dim);
+  transform: translateX(4px);
+}
+
+.exp-card[data-accent="teal"]   { border-left: 3px solid var(--rt-teal); }
+.exp-card[data-accent="violet"] { border-left: 3px solid var(--rt-violet); }
+.exp-card[data-accent="coral"]  { border-left: 3px solid var(--rt-coral); }
+.exp-card[data-accent="cyan"]   { border-left: 3px solid var(--rt-cyan); }
+.exp-card[data-accent="amber"]  { border-left: 3px solid var(--rt-amber); }
+.exp-card[data-accent="slate"]  { border-left: 3px solid var(--rt-slate); }
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.exp-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.exp-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--rt-text);
+  margin: 0;
+}
+
+.exp-company {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  color: var(--rt-text-dim);
+}
+
+.exp-dates {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.7rem;
+  color: var(--rt-accent-dim);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.exp-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.exp-bullets li {
+  font-size: 0.8rem;
+  color: var(--rt-text-dim);
+  line-height: 1.5;
+  padding-left: 1rem;
+  position: relative;
+  margin-bottom: 0.25rem;
+}
+
+.exp-bullets li:last-child {
+  margin-bottom: 0;
+}
+
+.exp-bullets li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--rt-accent-dim);
+  font-weight: 600;
+}
+
+/* =====================================================
+   SKILLS GRID
+   ===================================================== */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.skill-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--rt-surface);
+  border: 1px solid var(--rt-border);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.skill-card:hover {
+  border-color: var(--rt-accent-dim);
+  transform: translateX(4px);
+}
+
+.skill-card[data-accent="teal"]   { border-left: 3px solid var(--rt-teal); }
+.skill-card[data-accent="violet"] { border-left: 3px solid var(--rt-violet); }
+.skill-card[data-accent="coral"]  { border-left: 3px solid var(--rt-coral); }
+.skill-card[data-accent="amber"]  { border-left: 3px solid var(--rt-amber); }
+
+.skill-label {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--rt-accent);
+}
+
+.skill-items {
+  font-size: 0.8rem;
+  color: var(--rt-text-dim);
+  line-height: 1.4;
+}
+
+/* =====================================================
+   EDUCATION
+   ===================================================== */
+.edu-card {
+  padding: 0.75rem 1rem;
+  background: var(--rt-surface);
+  border: 1px solid var(--rt-border);
+  border-left: 3px solid var(--rt-accent);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.edu-card:hover {
+  border-color: var(--rt-accent-dim);
+  transform: translateX(4px);
+}
+
+.edu-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.edu-degree {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--rt-text);
+  margin: 0;
+}
+
+.edu-school {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  color: var(--rt-text-dim);
+}
+
+.edu-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.7rem;
+  color: var(--rt-accent-dim);
+  margin-top: 0.4rem;
+}
+
+.meta-sep {
+  color: var(--rt-border);
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+.resume-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rt-border);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+}
+
+.prompt-symbol {
+  color: var(--rt-accent);
+}
+
+.prompt-path {
+  color: var(--rt-text-dim);
+}
+
+.prompt-cursor {
+  color: var(--rt-accent);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+@media (max-width: 768px) {
+  .resume-paper {
+    padding: 1.5rem;
+  }
+
+  .resume-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .resume-avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  .resume-contact {
+    justify-content: center;
+  }
+
+  .resume-name {
+    font-size: 1.25rem;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exp-header {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .exp-dates {
+    align-self: flex-start;
+  }
+}
+
+/* =====================================================
+   PRINT STYLES
+   ===================================================== */
+/* =====================================================
+   PRINT STYLES - Full content, no scrollbar, 2 pages
+   Replace the entire @media print section with this
+   ===================================================== */
+
+   
+@media print {
+  /* Force color printing */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Page setup - minimal margins for maximum content */
+  @page {
+    size: letter;
+    margin: 0.3in 0.6in 0.67in 0.6in; /* Bottom 0.67in for education metadata */
+  }
+
+  /* Hide ALL terminal UI and browser print metadata */
+  .resume-action-bar,
+  .resume-footer {
+    display: none !important;
+  }
+  
+  /* More aggressive header/footer hiding */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  body::before,
+  body::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* CRITICAL: Reset all container constraints */
+  .resume-terminal {
+    opacity: 1 !important;
+    transform: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #1a1a2e !important;
+    display: block !important;
+  }
+
+  .resume-paper {
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    flex: none !important;
+  }
+
+  .resume-content {
+    max-width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+
+  /* Hide scrollbars completely */
+  .resume-paper::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+  }
+
+  /* ===== CONSOLIDATED FONT SYSTEM ===== */
+  /* 
+    TIER 1 (Body): 10pt - all body text, bullets, dates, contact info
+    TIER 2 (Headings): 11pt - job titles, section headers, degree
+    TIER 3 (Name): 20pt - your name only
+    
+    COLORS: #1a1a2e (dark text) + accent borders only
+  */
+
+  /* ===== HEADER ===== */
+  .resume-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding-bottom: 0.4rem !important; /* Reduced from 0.5rem */
+    margin-bottom: 0.35rem !important; /* Reduced from 0.4rem */
+    border-bottom: 2px solid #06b6d4 !important;
+  }
+
+  .resume-avatar {
+    display: none !important;
+  }
+
+  .resume-avatar img {
+    display: none !important;
+  }
+
+  .resume-header-text {
+    flex: 1 !important;
+  }
+
+  .resume-name {
+    font-size: 20pt !important; /* TIER 3: Name only */
+    font-weight: 700 !important;
+    color: #1a1a2e !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+    margin: 0 !important;
+  }
+
+  .resume-tagline {
+    font-size: 10pt !important; /* TIER 1: Body */
+    color: #1a1a2e !important;
+    margin: 0.15rem 0 0.35rem 0 !important;
+    font-weight: 400 !important;
+  }
+
+  .resume-contact {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.35rem !important;
+    font-size: 10pt !important; /* TIER 1: Body */
+  }
+
+  .resume-contact a,
+  .resume-contact .contact-link {
+    color: #1a1a2e !important;
+    text-decoration: none !important;
+  }
+
+  .resume-contact span {
+    color: #1a1a2e !important;
+  }
+
+  .contact-sep {
+    color: #1a1a2e !important;
+    opacity: 0.4 !important;
+  }
+
+  /* ===== SECTIONS ===== */
+  .resume-section {
+    margin-bottom: 0.3rem !important; /* Reduced from 0.35rem */
+  }
+
+  .section-title {
+    font-size: 11pt !important; /* TIER 2: Headings */
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    color: #1a1a2e !important;
+    margin: 0 0 0.2rem 0 !important; /* Reduced from 0.25rem */
+    padding-bottom: 0.1rem !important;
+    border-bottom: none !important;
+  }
+
+  /* ===== SUMMARY ===== */
+  .summary-text {
+    font-size: 10pt !important; /* TIER 1: Body */
+    line-height: 1.45 !important; /* Reduced from 1.5 */
+    color: #1a1a2e !important;
+    margin: 0 !important;
+    padding-left: 0.5rem !important; /* ADD PADDING so text isn't touching border */
+  }
+
+  /* ===== EXPERIENCE CARDS ===== */
+  .exp-card {
+    padding: 0.2rem 0 0.2rem 0.6rem !important; /* Reduced from 0.25rem */
+    margin-bottom: 0.25rem !important; /* Reduced from 0.3rem */
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    border-left: 3px solid #d1d5db !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .exp-card:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* Colored left borders - accent only, not in text */
+  .exp-card[data-accent="teal"]   { border-left-color: #06b6d4 !important; }
+  .exp-card[data-accent="violet"] { border-left-color: #8b5cf6 !important; }
+  .exp-card[data-accent="coral"]  { border-left-color: #f87171 !important; }
+  .exp-card[data-accent="cyan"]   { border-left-color: #22d3ee !important; }
+  .exp-card[data-accent="amber"]  { border-left-color: #f59e0b !important; }
+  .exp-card[data-accent="slate"]  { border-left-color: #64748b !important; }
+
+  .exp-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    margin-bottom: 0.15rem !important; /* Reduced from 0.2rem */
+  }
+
+  .exp-title-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  .exp-title {
+    font-size: 11pt !important; /* TIER 2: Headings */
+    font-weight: 600 !important;
+    color: #1a1a2e !important;
+    margin: 0 !important;
+  }
+
+  .exp-company {
+    font-size: 10pt !important; /* TIER 1: Body */
+    color: #1a1a2e !important;
+    margin: 0 !important;
+    font-weight: 400 !important;
+  }
+
+  .exp-dates {
+    font-size: 10pt !important; /* TIER 1: Body */
+    color: #1a1a2e !important;
+    white-space: nowrap !important;
+    font-weight: 400 !important;
+  }
+
+  .exp-bullets {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .exp-bullets li {
+    font-size: 10pt !important; /* TIER 1: Body */
+    line-height: 1.4 !important; /* Reduced from 1.45 */
+    color: #1a1a2e !important;
+    padding-left: 0.8rem !important;
+    margin-bottom: 0.05rem !important; /* Reduced from 0.08rem */
+    position: relative !important;
+  }
+
+  .exp-bullets li:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .exp-bullets li::before {
+    content: "›" !important;
+    position: absolute !important;
+    left: 0 !important;
+    color: #1a1a2e !important;
+    font-weight: 600 !important;
+    opacity: 0.4 !important;
+  }
+
+  /* ===== SKILLS GRID ===== */
+  .skills-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.3rem !important; /* Reduced from 0.35rem */
+  }
+
+  .skill-card {
+    padding: 0.2rem 0.5rem !important; /* Reduced from 0.25rem */
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    border-left: 3px solid #d1d5db !important;
+    break-inside: avoid !important;
+  }
+
+  .skill-card[data-accent="teal"]   { border-left-color: #06b6d4 !important; }
+  .skill-card[data-accent="violet"] { border-left-color: #8b5cf6 !important; }
+  .skill-card[data-accent="coral"]  { border-left-color: #f87171 !important; }
+  .skill-card[data-accent="amber"]  { border-left-color: #f59e0b !important; }
+
+  .skill-label {
+    font-size: 11pt !important; /* TIER 2: Headings */
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: #1a1a2e !important;
+    margin-bottom: 0.05rem !important;
+  }
+
+  .skill-items {
+    font-size: 10pt !important; /* TIER 1: Body */
+    line-height: 1.35 !important; /* Reduced from 1.4 */
+    color: #1a1a2e !important;
+  }
+
+  /* ===== EDUCATION ===== */
+  .edu-card {
+    padding: 0.3rem 0.5rem !important;
+    background: transparent !important;
+    border: none !important;
+    border-left: 3px solid #06b6d4 !important;
+    border-radius: 0 !important;
+  }
+
+  .edu-main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  .edu-degree {
+    font-size: 11pt !important; /* TIER 2: Headings */
+    font-weight: 600 !important;
+    color: #1a1a2e !important;
+    margin: 0 !important;
+  }
+
+  .edu-school {
+    font-size: 10pt !important; /* TIER 1: Body */
+    color: #1a1a2e !important;
+    font-weight: 400 !important;
+  }
+
+  .edu-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.35rem !important;
+    font-size: 10pt !important; /* TIER 1: Body */
+    color: #1a1a2e !important;
+    margin-top: 0.2rem !important;
+  }
+
+  .meta-sep {
+    color: #1a1a2e !important;
+    opacity: 0.4 !important;
+  }
+}

@@ -1,0 +1,18 @@
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Leave space for header and dock */
+  padding-top: 100px;
+  padding-bottom: 280px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 80px;
+    padding-bottom: 60vh; /* Space for card stack */
+  }
+}

@@ -1,0 +1,269 @@
+/* ContactTerminal.css */
+
+.contact-terminal {
+  --contact-bg: #0a0f14;
+  --contact-surface: rgba(15, 23, 35, 0.6);
+  --contact-border: rgba(8, 145, 178, 0.2);
+  --contact-text: #f2efe8;
+  --contact-text-dim: rgba(242, 239, 232, 0.6);
+  --contact-accent: #06b6d4;
+  --contact-accent-dim: rgba(6, 182, 212, 0.4);
+  
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--contact-text);
+  line-height: 1.5;
+  padding: 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.contact-terminal.mounted {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Icons */
+.contact-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  stroke: var(--contact-accent);
+  transition: stroke 0.2s ease, transform 0.2s ease;
+}
+
+/* Header */
+.contact-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--contact-border);
+}
+
+.contact-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.contact-title-row .contact-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.contact-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, var(--contact-text) 0%, var(--contact-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.contact-subtitle {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.9rem;
+  color: var(--contact-text-dim);
+}
+
+/* Contact list */
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--contact-surface);
+  border: 1px solid var(--contact-border);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  animation: fadeInUp 0.3s ease forwards;
+  opacity: 0;
+}
+
+.contact-terminal.mounted .contact-row {
+  opacity: 1;
+}
+
+.contact-row:hover {
+  border-color: var(--contact-accent-dim);
+  background: rgba(6, 182, 212, 0.05);
+  transform: translateX(4px);
+}
+
+.contact-row:hover .contact-icon {
+  stroke: var(--contact-accent);
+  transform: scale(1.1);
+}
+
+.contact-row-button {
+  font: inherit;
+  width: 100%;
+  text-align: left;
+}
+
+.contact-row-static {
+  cursor: pointer;
+}
+
+.contact-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(6, 182, 212, 0.1);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.contact-icon-wrap .contact-icon {
+  width: 16px;
+  height: 16px;
+  stroke: var(--contact-accent-dim);
+}
+
+.contact-row:hover .contact-icon-wrap .contact-icon {
+  stroke: var(--contact-accent);
+}
+
+.contact-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--contact-text-dim);
+  min-width: 60px;
+}
+
+.contact-value {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--contact-text);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.contact-copied {
+  font-size: 0.7rem;
+  color: #22c55e;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* CTA */
+.contact-cta {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--contact-border);
+}
+
+.contact-cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, var(--contact-accent) 0%, #0891b2 100%);
+  border: none;
+  border-radius: 8px;
+  color: #0a0f14;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--contact-accent-dim);
+}
+
+.contact-cta-button .contact-icon {
+  stroke: #0a0f14;
+  width: 18px;
+  height: 18px;
+}
+
+/* Footer */
+.contact-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--contact-border);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+}
+
+.prompt-symbol {
+  color: var(--contact-accent);
+}
+
+.prompt-path {
+  color: var(--contact-text-dim);
+}
+
+.prompt-cursor {
+  color: var(--contact-accent);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .contact-terminal {
+    padding: 1.5rem;
+  }
+
+  .contact-title {
+    font-size: 1.1rem;
+  }
+
+  .contact-row {
+    padding: 0.75rem;
+  }
+
+  .contact-label {
+    min-width: 50px;
+    font-size: 0.65rem;
+  }
+
+  .contact-value {
+    font-size: 0.8rem;
+  }
+}
